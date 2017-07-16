@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.LoginDao">
+    <resultMap id="BaseResultMap" type="com.huorong.domain.User">
+        <result column="username" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="addr" property="addr"/>
+    </resultMap>
+
+    <parameterMap id="user" type="com.huorong.domain.User"/>
+
+    <sql id="Base_Column_List">
+        username,  password,  email, phone, addr
+    </sql>
+
+    <select id="findUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where username = #{name}
+    </select>
+
+</mapper>
