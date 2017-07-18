@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.TestDao">
+    <!--<select   id="selectPerson"   parameterType="int"   parameterMap="deprecated"   resultType="hashmap"
+    resultMap="personResultMap"   flushCache="false"
+    useCache="true"   timeout="10000"   fetchSize="256"   statementType="PREPARED"
+    resultSetType="FORWARD_ONLY">-->
+    <select id="findUser" resultType="hashmap">
+        select
+        *
+        from dept
+    </select>
+
+</mapper>

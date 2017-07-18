@@ -1,5 +1,8 @@
 package com.huorong.domain;
 
+/**
+ * 自定义数据返回
+ */
 public class Result {
 
     private String code, message;
