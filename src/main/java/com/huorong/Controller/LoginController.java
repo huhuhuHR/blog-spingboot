@@ -2,7 +2,7 @@ package com.huorong.Controller;
 
 import com.huorong.domain.Result;
 import com.huorong.service.LoginService;
-import com.huorong.utils.NewMapUtils;
+import com.huorong.utils.MyMapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +24,6 @@ public class LoginController {
         if (!loginService.checkUser(params)) {
             return Result.build("1", "error");
         }
-        return Result.build("0", "ok", NewMapUtils.asMap("result", "success"));
+        return Result.build("0", "ok", MyMapUtils.asMap("result", "success"));
     }
 }
