@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.huorong.dao.ArticleDao">
+    <resultMap id="ArticleResultMap" type="com.huorong.domain.Article">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="author" column="author"/>
+        <result property="title" column="article_title"/>
+        <result property="body" column="article_body"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remove" column="remove"/>
+        <result property="state" column="state"/>
+    </resultMap>
+    <sql id="Article_Column_List">
+        id,author,user_id,article_title,article_body,create_time,update_time,remove,state
+    </sql>
     <!--传入单个参数 String name #{name}-->
-    <select id="checkCookieExist" resultMap="java.lang.Integer" parameterType="java.lang.String">
+    <select id="checkCookieExist" parameterType="java.lang.String" resultType="java.lang.Integer">
         SELECT count(*)
         FROM user_record
         WHERE cookie = #{cookie}
     </select>
 
-    <select id="selectArticleList" resultMap="com.huorong.domain.Article" parameterType="java.lang.String">
+    <select id="selectArticleList" resultMap="ArticleResultMap" parameterType="java.lang.String">
         SELECT
-                ua.id 'id',
-                u.name 'author',
-                ua.create_time 'time',
-                ua.article_title 'title',
-                ua.article_body 'body'
-        FROM user u, user_article ua
-        WHERE u.id = ua.user_id
-              AND u.id = #{id}
+        <include refid="Article_Column_List"/>
+        FROM user_article
+        WHERE user_id =#{id}
     </select>
 
 

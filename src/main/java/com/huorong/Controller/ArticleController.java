@@ -1,5 +1,6 @@
 package com.huorong.Controller;
 
+import com.huorong.domain.Article;
 import com.huorong.domain.Result;
 import com.huorong.service.ArticleService;
 import com.huorong.service.CommonService;
@@ -31,7 +32,7 @@ public class ArticleController {
         if (!articleService.checkCookieRecord(cookie)) {
             return Result.build("1", "error");
         }
-        List<Map> article = articleService.selectArticleList(id);
+        List<Article> article = articleService.selectArticleList(id);
         return Result.build("0", "ok", MyMapUtils.asMap("personRecordList", article));
     }
 }

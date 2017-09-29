@@ -1,18 +1,17 @@
 package com.huorong.service.impl;
 
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.huorong.dao.LoginDao;
 import com.huorong.domain.User;
 import com.huorong.service.LoginService;
 import com.huorong.utils.MyMapUtils;
 import com.huorong.utils.secret.AESKey;
 import com.huorong.utils.secret.AESUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * Created by huorong on 17/7/16.
@@ -26,7 +25,8 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Map checkUser(String name, String password) {
         try {
-            User user = loginDao.findUserByName(AESUtil.encrypt(name, AESKey.AES_Key));
+            String nameE = AESUtil.encrypt(name, AESKey.AES_Key);
+            User user = loginDao.findUserByName(nameE);
             if (password.equals(AESUtil.decrypt(user.getPassword(), AESKey.AES_Key))) {
                 return MyMapUtils.of("flag", true, "id", user.getId());
             }

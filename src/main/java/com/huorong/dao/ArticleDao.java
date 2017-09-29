@@ -1,5 +1,7 @@
 package com.huorong.dao;
 
+import com.huorong.domain.Article;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,5 +11,5 @@ import java.util.Map;
 public interface ArticleDao {
     int checkCookieExist(Map parms);
 
-    List<Map> selectArticleList(Map parms);
+    List<Article> selectArticleList(Map parms);
 }

@@ -44,5 +44,4 @@
             VALUES (#{id},#{cookie},now(),#{time})
         </if>
     </insert>
-
 </mapper>

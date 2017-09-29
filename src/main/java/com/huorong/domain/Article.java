@@ -8,10 +8,12 @@ import lombok.Data;
 @Data
 public class Article {
     private String id;
+    private String userId;
     private String author;
     private String title;
     private String body;
-    private String time;
+    private String createTime;
+    private String updateTime;
     private String remove;
     private String state;
 }
