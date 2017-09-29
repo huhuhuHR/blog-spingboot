@@ -7,14 +7,13 @@ import lombok.Data;
  */
 @Data
 public class User {
-    // `username` varchar(255) DEFAULT NULL,
-    // `password` varchar(255) DEFAULT NULL,
-    // `email` varchar(255) DEFAULT NULL,
-    // `phone` varchar(255) DEFAULT NULL,
-    // `addr` varchar(255) DEFAULT NULL,
-    private String userName;
+    private String id;
     private String password;
+    private String name;
     private String email;
     private String phone;
     private String addr;
+    private String state;
+    private String create_time;
+    private String update_time;
 }

@@ -2,24 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.huorong.dao.LoginDao">
     <resultMap id="BaseResultMap" type="com.huorong.domain.User">
-        <result column="username" property="userName"/>
+        <result column="id" property="id"/>
         <result column="password" property="password"/>
+        <result column="name" property="name"/>
         <result column="email" property="email"/>
         <result column="phone" property="phone"/>
+        <result column="create_time" property="create_time"/>
+        <result column="update_time" property="update_time"/>
+        <result column="state" property="state"/>
         <result column="addr" property="addr"/>
     </resultMap>
 
     <parameterMap id="user" type="com.huorong.domain.User"/>
 
     <sql id="Base_Column_List">
-        username,  password,  email, phone, addr
+        id, password, name, email, phone, addr, state, create_time, update_time
     </sql>
-
-    <select id="findUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <!--传入单个参数 String name #{name}-->
+    <select id="findUserByName" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from user
-        where username = #{name}
+        where name = #{name}
     </select>
+
+
+    <insert id="insertCokie" parameterType="java.lang.String">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            select count(*) from user_record where id = #{id}
+        </selectKey>
+        <if test="count > 0">
+            update user_record
+            set cookie = #{cookie},
+            create_time = now(),
+            valid_time = #{time}
+            where id = #{id}
+        </if>
+        <if test="count==0">
+            INSERT INTO user_record
+            (id, cookie, create_time, valid_time)
+            VALUES (#{id},#{cookie},now(),#{time})
+        </if>
+    </insert>
 
 </mapper>

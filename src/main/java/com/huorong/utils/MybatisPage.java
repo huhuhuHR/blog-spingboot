@@ -1,6 +1,5 @@
 package com.huorong.utils;
 
-import com.github.pagehelper.PageInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -15,18 +14,6 @@ public class MybatisPage {
     private long listSize;// 查询数据总数字
     private int pagesSize;// 总页数
     private List list;// 查到的数据
-
-    public MybatisPage(PageInfo pageInfo) {
-        this.currentPageNum = pageInfo.getPageNum();
-        this.pageSize = pageInfo.getPageSize();
-        this.listSize = pageInfo.getTotal();
-        this.pagesSize = pageInfo.getPages();
-        this.list = pageInfo.getList();
-    }
-
-    public static MybatisPage bulid(PageInfo pageInfo) {
-        return new MybatisPage(pageInfo);
-    }
 
     @Override
     public String toString() {

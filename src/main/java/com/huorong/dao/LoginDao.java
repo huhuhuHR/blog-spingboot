@@ -8,5 +8,7 @@ import java.util.Map;
  * Created by huorong on 17/7/16.
  */
 public interface LoginDao {
-    User findUser(Map params);
+    User findUserByName(String name);
+
+    int insertCokie(Map params);
 }
