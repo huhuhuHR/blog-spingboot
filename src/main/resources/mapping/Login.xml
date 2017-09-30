@@ -27,7 +27,7 @@
     </select>
 
 
-    <insert id="insertCokie" parameterType="java.lang.String">
+    <insert id="insertCokie" parameterType="java.util.Map">
         <selectKey keyProperty="count" resultType="int" order="BEFORE">
             select count(*) from user_record where id = #{id}
         </selectKey>

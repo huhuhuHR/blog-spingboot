@@ -4,8 +4,9 @@ import com.huorong.domain.Article;
 import com.huorong.domain.Result;
 import com.huorong.service.ArticleService;
 import com.huorong.service.CommonService;
-import com.huorong.utils.MyMapUtils;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("article")
 public class ArticleController {
+    private Logger log = LoggerFactory.getLogger(ArticleController.class);
     @Autowired
     ArticleService articleService;
     @Autowired
@@ -28,11 +30,12 @@ public class ArticleController {
     @RequestMapping("/personRecord")
     public Result checkLogin(@RequestParam Map params) {
         String id = MapUtils.getString(params, "id");
+        log.info("霍荣" + id);
         String cookie = commonService.CookieDeAESC(MapUtils.getString(params, "cookie"));
         if (!articleService.checkCookieRecord(cookie)) {
             return Result.build("1", "error");
         }
         List<Article> article = articleService.selectArticleList(id);
-        return Result.build("0", "ok", MyMapUtils.asMap("personRecordList", article));
+        return Result.build("0", "ok", com.huorong.utils.MapUtils.asMap("personRecordList", article));
     }
 }

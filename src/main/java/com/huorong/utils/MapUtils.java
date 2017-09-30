@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class MyMapUtils {
+public class MapUtils {
     public static <K, V> Map<K, V> of(K k1, V v1) {
         Map<K, V> map = newHashMap();
         map.put(k1, v1);

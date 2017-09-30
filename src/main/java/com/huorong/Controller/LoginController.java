@@ -3,7 +3,6 @@ package com.huorong.Controller;
 import com.huorong.domain.Result;
 import com.huorong.service.CommonService;
 import com.huorong.service.LoginService;
-import com.huorong.utils.MyMapUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +33,8 @@ public class LoginController {
         }
         String id = MapUtils.getString(result, "id");
         String cookie = UUID.randomUUID().toString();
-        loginService.insertCokie(MyMapUtils.of("id", id, "cookie", cookie, "time", "30"));
-        return Result.build("0", "ok", MyMapUtils.asMap("cookie", commonService.CookieEeAESC(cookie), "id", id));
+        loginService.insertCokie(com.huorong.utils.MapUtils.of("id", id, "cookie", cookie, "time", "30"));
+        return Result.build("0", "ok",
+                com.huorong.utils.MapUtils.asMap("cookie", commonService.CookieEeAESC(cookie), "id", id));
     }
 }

@@ -3,7 +3,7 @@ package com.huorong.service.impl;
 import com.huorong.dao.LoginDao;
 import com.huorong.domain.User;
 import com.huorong.service.LoginService;
-import com.huorong.utils.MyMapUtils;
+import com.huorong.utils.MapUtils;
 import com.huorong.utils.secret.AESKey;
 import com.huorong.utils.secret.AESUtil;
 import org.slf4j.Logger;
@@ -28,13 +28,13 @@ public class LoginServiceImpl implements LoginService {
             String nameE = AESUtil.encrypt(name, AESKey.AES_Key);
             User user = loginDao.findUserByName(nameE);
             if (password.equals(AESUtil.decrypt(user.getPassword(), AESKey.AES_Key))) {
-                return MyMapUtils.of("flag", true, "id", user.getId());
+                return MapUtils.of("flag", true, "id", user.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.debug("查到的为空");
         }
-        return MyMapUtils.of("flag", false);
+        return MapUtils.of("flag", false);
     }
 
     @Override
