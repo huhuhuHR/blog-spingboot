@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.HomeHeadDao">
+    <resultMap id="router" type="com.huorong.domain.Router">
+        <result property="id" column="user_id"/>
+        <result property="iconName" column="icon_name"></result>
+        <result property="name" column="router_name"/>
+        <result property="router" column="home_router"/>
+        <result property="showNumber" column="show_number"/>
+    </resultMap>
+    <sql id="Router_Column_List">
+        user_id,icon_name,router_name,home_router,show_number
+    </sql>
+    <!--传入单个参数 String name #{name}-->
+    <select id="routerList" parameterType="java.util.Map" resultMap="router">
+        SELECT
+        <include refid="Router_Column_List"/>
+        FROM user_home_page
+        WHERE user_id = #{id}
+        AND show_number != '0'
+        ORDER BY show_number
+    </select>
+</mapper>
