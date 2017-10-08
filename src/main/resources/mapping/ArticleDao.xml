@@ -27,7 +27,19 @@
         <include refid="Article_Column_List"/>
         FROM user_article
         WHERE user_id =#{id}
+        ORDER BY create_time DESC
     </select>
 
+    <insert id="saveArticle" parameterType="java.util.Map">
+      INSERT INTO user_article (id, user_id, article_title, article_body,
+                                create_time, update_time, remove, state, author)
+        VALUES (#{id},#{userId},#{articleTitle},#{articleBody},now(),now(),'0','1',#{author})
+    </insert>
 
+    <select id="articleDetail" parameterType="java.lang.String" resultMap="ArticleResultMap">
+        SELECT
+        <include refid="Article_Column_List"/>
+        FROM user_article
+        WHERE id =#{id}
+    </select>
 </mapper>
