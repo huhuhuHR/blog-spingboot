@@ -17,4 +17,8 @@ public interface ArticleDao {
     int saveArticle(Map params);
 
     Article articleDetail(String id);
+
+    int articleDelete(String id);
+
+    int updateArticle(Map params);
 }

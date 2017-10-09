@@ -35,4 +35,20 @@ public class ArticleService {
     public Article articleDetail(String id) {
         return articleDao.articleDetail(id);
     }
+
+    public boolean articleDelete(String id) {
+        int result = articleDao.articleDelete(id);
+        if (result == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateArticle(Map params) {
+        int result = articleDao.updateArticle(params);
+        if (result == 1) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -27,6 +27,7 @@
         <include refid="Article_Column_List"/>
         FROM user_article
         WHERE user_id =#{id}
+        AND remove = '0'
         ORDER BY create_time DESC
     </select>
 
@@ -41,5 +42,22 @@
         <include refid="Article_Column_List"/>
         FROM user_article
         WHERE id =#{id}
+        AND remove = '0'
     </select>
+
+    <update id="articleDelete">
+        UPDATE user_article
+        SET remove = '1',
+        update_time = now()
+        WHERE id = #{id}
+    </update>
+    <update id="updateArticle">
+        UPDATE user_article
+        SET article_title = #{articleTitle},
+        article_body = #{articleBody},
+        author = #{author},
+        update_time = now()
+        WHERE id = #{id}
+        AND remove = '0'
+    </update>
 </mapper>

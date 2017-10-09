@@ -46,10 +46,20 @@ public class ArticleController {
         return articleService.saveArticle(params) ? Result.build("0", "ok") : Result.build("1", "error");
     }
 
+    @RequestMapping("/updateArticle")
+    public Result updateArticle(@RequestParam Map params) {
+        return articleService.updateArticle(params) ? Result.build("0", "ok") : Result.build("1", "error");
+    }
+
     @RequestMapping("/articleDetail")
     public Result articleDetail(@RequestParam String id) {
         Article article = articleService.articleDetail(id);
         return article != null ? Result.build("0", "ok", com.huorong.utils.MapUtils.asMap("article", article))
                 : Result.build("1", "error");
+    }
+
+    @RequestMapping("/delete")
+    public Result articleDelete(@RequestParam String id) {
+        return articleService.articleDelete(id) ? Result.build("0", "ok") : Result.build("1", "error");
     }
 }
