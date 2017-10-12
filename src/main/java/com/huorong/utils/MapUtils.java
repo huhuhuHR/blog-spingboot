@@ -85,18 +85,24 @@ public class MapUtils {
     }
 
     public static String getStr(Map m, Object key, String defaultValue) {
-        if (m == null) return defaultValue;
+        if (m == null)
+            return defaultValue;
         Object value = m.get(key);
-        if (value == null) return defaultValue;
+        if (value == null)
+            return defaultValue;
         return value.toString();
     }
 
     public static Number getNum(Map m, Object key) {
-        if (m == null) return null;
+        if (m == null)
+            return null;
         Object value = m.get(key);
-        if (value == null) return null;
-        if (value instanceof Number) return (Number) value;
-        if (!(value instanceof String)) return null;
+        if (value == null)
+            return null;
+        if (value instanceof Number)
+            return (Number) value;
+        if (!(value instanceof String))
+            return null;
         try {
             return NumberFormat.getInstance().parse((String) value);
         } catch (ParseException e) {
@@ -106,7 +112,8 @@ public class MapUtils {
 
     public static Integer getInt(Map m, Object key) {
         Number value = getNum(m, key);
-        if (value == null) return null;
+        if (value == null)
+            return null;
         return value instanceof Integer ? (Integer) value : Integer.valueOf(value.intValue());
     }
 
@@ -118,7 +125,8 @@ public class MapUtils {
     }
 
     public static <K> List<K> getListForce(Map m, Object key) {
-        if (m == null) return null;
+        if (m == null)
+            return null;
         Object value = m.get(key);
         if (value == null) {
             List<K> list = new ArrayList<K>();
@@ -133,7 +141,8 @@ public class MapUtils {
     }
 
     public static <K, V> Map<K, V> getMapForce(Map m, Object key) {
-        if (m == null) return null;
+        if (m == null)
+            return null;
         Object value = m.get(key);
         if (value == null) {
             Map<K, V> ret = new HashMap<K, V>();
@@ -182,5 +191,15 @@ public class MapUtils {
             }
             to.put(entry.getKey(), entry.getValue());
         }
+    }
+
+    public static <T> Map<T, T> of(Map params, T... keyAndValues) {
+        for (int i = 0; i < keyAndValues.length; i += 2) {
+            T key = keyAndValues[i];
+            T value = i + 1 < keyAndValues.length ? keyAndValues[i + 1] : null;
+            params.put(key, value);
+        }
+
+        return params;
     }
 }
