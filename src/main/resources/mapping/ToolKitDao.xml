@@ -6,13 +6,14 @@
         <result property="userId" column="user_id"/>
         <result property="iconName" column="icon_name"/>
         <result property="url" column="url"/>
+        <result property="urlName" column="url_name"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="remove" column="remove"/>
         <result property="state" column="state"/>
     </resultMap>
     <sql id="ToolKit_Column_List">
-        id,user_id,icon_name,url,create_time,update_time,remove,state
+        id,user_id,icon_name,url,url_name,create_time,update_time,remove,state
     </sql>
     <select id="selectTookies" parameterType="java.lang.String" resultMap="ToolKitResultMap">
         SELECT
@@ -22,8 +23,8 @@
     </select>
     <insert id="insertToolKit">
         insert into user_toolkit
-          (id,user_id,icon_name,url,create_time,update_time,remove,state)
-          values(#{id},#{userId},#{iconName},#{url},now(),now(),'0','1')
+        (id,user_id,icon_name,url,url_name,create_time,update_time,remove,state)
+        values(#{id},#{userId},#{iconName},#{url},#{urlName},now(),now(),'0','1')
     </insert>
     <select id="selectUserId" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT id 'userId'

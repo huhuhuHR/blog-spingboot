@@ -11,6 +11,7 @@ public class Toolkit {
     private String userId;
     private String iconName;
     private String url;
+    private String urlName;
     private String createTime;
     private String updateTime;
     private String remove;
