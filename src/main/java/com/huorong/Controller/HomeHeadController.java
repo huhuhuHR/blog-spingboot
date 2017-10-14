@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +22,9 @@ public class HomeHeadController {
 
     @RequestMapping("/headList")
     public Result headList(@RequestParam Map params) {
-        return Result.build("0", "ok", MapUtils.asMap("routerList", homeHeadService.routerList(params)));
+        String id = MapUtils.getStr(params, "id");
+        List<Map> article = homeHeadService.selectArticleList(id).subList(0, 3);
+        return Result.build("0", "ok",
+                MapUtils.asMap("routerList", homeHeadService.routerList(params), "articleList", article));
     }
 }

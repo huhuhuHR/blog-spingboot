@@ -16,4 +16,6 @@ public class Article {
     private String updateTime;
     private String remove;
     private String state;
+    private String desciption;
+    private String imageUrl;
 }

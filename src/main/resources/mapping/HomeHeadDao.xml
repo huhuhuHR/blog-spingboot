@@ -20,4 +20,13 @@
         AND show_number != '0'
         ORDER BY show_number
     </select>
+
+    <select id="selectArticleList" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT
+        id,author,user_id 'userId',article_title 'title',article_desc 'desciption',image_url 'imageUrl',create_time 'createTime',update_time 'updateTime',remove,state
+        FROM user_article
+        WHERE user_id =#{id}
+        AND remove = '0'
+        ORDER BY update_time DESC
+    </select>
 </mapper>

@@ -11,12 +11,14 @@
         <result property="updateTime" column="update_time"/>
         <result property="remove" column="remove"/>
         <result property="state" column="state"/>
+        <result property="desciption" column="article_desc"/>
+        <result property="imageUrl" column="image_url"/>
     </resultMap>
     <sql id="Article_Column_List">
-        id,author,user_id,article_title,article_body,create_time,update_time,remove,state
+        id,author,user_id,article_title,article_body,create_time,update_time,remove,state,article_desc,image_url
     </sql>
     <sql id="Article_Column_List_noBody">
-        id,author,user_id,article_title,create_time,update_time,remove,state
+        id,author,user_id,article_title,article_desc,image_url,create_time,update_time,remove,state
     </sql>
     <!--传入单个参数 String name #{name}-->
     <select id="checkCookieExist" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -36,8 +38,8 @@
 
     <insert id="saveArticle" parameterType="java.util.Map">
       INSERT INTO user_article (id, user_id, article_title, article_body,
-                                create_time, update_time, remove, state, author)
-        VALUES (#{id},#{userId},#{articleTitle},#{articleBody},now(),now(),'0','1',#{author})
+                                create_time, update_time, remove, state, author,article_desc)
+        VALUES (#{id},#{userId},#{articleTitle},#{articleBody},now(),now(),'0','1',#{author},#{desciption})
     </insert>
 
     <select id="articleDetail" parameterType="java.lang.String" resultMap="ArticleResultMap">
@@ -59,6 +61,7 @@
         SET article_title = #{articleTitle},
         article_body = #{articleBody},
         author = #{author},
+        article_desc = #{desciption},
         update_time = now()
         WHERE id = #{id}
         AND remove = '0'

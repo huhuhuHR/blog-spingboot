@@ -19,4 +19,8 @@ public class HomeHeadService {
     public List<Router> routerList(Map parmas) {
         return homeHeadDao.routerList(parmas);
     }
+
+    public List<Map> selectArticleList(String id) {
+        return homeHeadDao.selectArticleList(id);
+    }
 }
