@@ -22,10 +22,10 @@
         <include refid="Record_Column_List"></include>
         FROM user_work_record
         WHERE user_id = #{userId}
-        ORDER BY create_time
+        ORDER BY create_time DESC
     </select>
     <insert id="saveRecord" parameterType="java.util.Map">
         INSERT INTO user_work_record(id,user_id,record_body,create_time,remove,state)
-        VALUES (#{id},#{userId},#{recordBody},#{createTime},'0','1')
+        VALUES (#{id},#{userId},#{recordBody},now(),'0','1')
     </insert>
 </mapper>
