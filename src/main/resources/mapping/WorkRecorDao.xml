@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.WorkRecordDao">
+    <resultMap id="WorkRecordResultMap" type="com.huorong.domain.WorkRecord">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="recordBody" column="record_body"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remove" column="remove"/>
+        <result property="state" column="state"/>
+    </resultMap>
+    <sql id="Record_Column_List">
+        id,
+        user_id,
+        record_body,
+        create_time,
+        remove,
+        state
+    </sql>
+    <select id="selectRecord" parameterType="java.lang.String" resultMap="WorkRecordResultMap">
+        SELECT
+        <include refid="Record_Column_List"></include>
+        FROM user_work_record
+        WHERE user_id = #{userId}
+        ORDER BY create_time
+    </select>
+    <insert id="saveRecord" parameterType="java.util.Map">
+        INSERT INTO user_work_record(id,user_id,record_body,create_time,remove,state)
+        VALUES (#{id},#{userId},#{recordBody},#{createTime},'0','1')
+    </insert>
+</mapper>
