@@ -14,4 +14,6 @@ public interface ToolKitDao {
     String selectUserId(String cookie);
 
     List<Toolkit> selectTookies(String userId);
+
+    int updateCountById(Map params);
 }

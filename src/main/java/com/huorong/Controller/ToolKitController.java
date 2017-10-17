@@ -25,6 +25,7 @@ public class ToolKitController {
 
     @RequestMapping("inserToolKit")
     public Result insertToolKit(@RequestParam Map params) {
+        toolKitService.checkParmsEmpty(params);
         MapUtils.of(params, "id", Id.next(), "userId",
                 toolKitService.selectUserId(commonService.CookieDeAESC(MapUtils.getStr(params, "cookie"))));
         return toolKitService.insertToolKit(params) ? Result.build("0", "ok") : Result.build("1", "error");
@@ -33,5 +34,10 @@ public class ToolKitController {
     @RequestMapping("selectTookies")
     public Result selectTookies(@RequestParam String userId) {
         return Result.build("0", "ok", MapUtils.of("toolKitList", toolKitService.selectTookies(userId)));
+    }
+
+    @RequestMapping("updateCountById")
+    public Result updateCountById(@RequestParam Map params) {
+        return toolKitService.updateCountById(params) ? Result.build("0", "ok") : Result.build("1", "error");
     }
 }

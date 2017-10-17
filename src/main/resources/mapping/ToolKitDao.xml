@@ -20,6 +20,7 @@
         <include refid="ToolKit_Column_List"/>
         from user_toolkit
         WHERE user_id = #{userId}
+        ORDER BY click_count DESC
     </select>
     <insert id="insertToolKit">
         insert into user_toolkit
@@ -31,4 +32,10 @@
         from user_record
         WHERE cookie = #{cookie}
     </select>
+    <update id="updateCountById" parameterType="java.util.Map">
+        UPDATE user_toolkit
+        SET click_count = (click_count + 1)
+        WHERE id = #{id}
+        and user_id = #{userId}
+    </update>
 </mapper>
