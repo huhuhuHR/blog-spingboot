@@ -20,6 +20,7 @@ public class ToolKitService {
     ToolKitDao toolKitDao;
 
     public boolean insertToolKit(Map params) {
+        params.put("iconName", "iconfont " + MapUtils.getStr(params, "iconName"));
         return toolKitDao.insertToolKit(params) == 1;
     }
 
