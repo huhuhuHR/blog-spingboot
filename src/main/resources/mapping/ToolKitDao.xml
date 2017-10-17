@@ -38,4 +38,9 @@
         WHERE id = #{id}
         and user_id = #{userId}
     </update>
+    <delete id="deleteToolkit" parameterType="java.util.Map">
+      DELETE from user_toolkit
+      WHERE id = #{id}
+      AND user_id = #{userId}
+    </delete>
 </mapper>

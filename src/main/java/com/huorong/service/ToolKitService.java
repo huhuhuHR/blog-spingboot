@@ -45,4 +45,8 @@ public class ToolKitService {
             params.put("urlName", RandomAEnum.randomAEnum().getUrlName());
         }
     }
+
+    public boolean deleteToolkit(Map params) {
+        return toolKitDao.deleteToolkit(params) == 1;
+    }
 }

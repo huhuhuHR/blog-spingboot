@@ -40,4 +40,9 @@ public class ToolKitController {
     public Result updateCountById(@RequestParam Map params) {
         return toolKitService.updateCountById(params) ? Result.build("0", "ok") : Result.build("1", "error");
     }
+
+    @RequestMapping("deleteToolkit")
+    public Result deleteToolkit(@RequestParam Map params) {
+        return toolKitService.deleteToolkit(params) ? Result.build("0", "ok") : Result.build("1", "error");
+    }
 }
