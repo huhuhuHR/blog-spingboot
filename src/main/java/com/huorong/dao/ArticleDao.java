@@ -14,6 +14,8 @@ public interface ArticleDao {
 
     List<Article> selectArticleList(@Param("id") String id);
 
+    List<Article> searchByValue(Map params);
+
     int saveArticle(Map params);
 
     Article articleDetail(String id);

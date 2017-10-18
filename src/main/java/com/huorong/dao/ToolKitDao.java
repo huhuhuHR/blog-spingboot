@@ -15,6 +15,8 @@ public interface ToolKitDao {
 
     List<Toolkit> selectTookies(String userId);
 
+    List<Toolkit> searchKey(Map params);
+
     int updateCountById(Map params);
 
     int deleteToolkit(Map params);

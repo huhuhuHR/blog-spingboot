@@ -24,6 +24,10 @@ public class ArticleService {
         return articleDao.selectArticleList(id);
     }
 
+    public List<Article> searchByValue(Map params) {
+        return articleDao.searchByValue(params);
+    }
+
     public boolean saveArticle(Map params) {
         int result = articleDao.saveArticle(params);
         if (result == 1) {

@@ -32,6 +32,10 @@ public class ToolKitService {
         return toolKitDao.selectTookies(userId);
     }
 
+    public List<Toolkit> searchKey(Map params) {
+        return toolKitDao.searchKey(params);
+    }
+
     public boolean updateCountById(Map params) {
         return toolKitDao.updateCountById(params) == 1;
     }

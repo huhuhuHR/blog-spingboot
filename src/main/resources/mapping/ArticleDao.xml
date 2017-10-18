@@ -36,6 +36,23 @@
         ORDER BY create_time DESC
     </select>
 
+    <select id="searchByValue" resultMap="ArticleResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Article_Column_List_noBody"/>
+        FROM user_article
+        WHERE user_id = #{id}
+        AND (article_title LIKE concat('%', #{searchKey}, '%')
+        ||
+        article_body LIKE concat('%', #{searchKey}, '%')
+        ||
+        author LIKE concat('%', #{searchKey}, '%')
+        ||
+        article_desc LIKE concat('%', #{searchKey}, '%')
+        )
+        AND remove = '0'
+        ORDER BY create_time DESC
+    </select>
+
     <insert id="saveArticle" parameterType="java.util.Map">
       INSERT INTO user_article (id, user_id, article_title, article_body,
                                 create_time, update_time, remove, state, author,article_desc)

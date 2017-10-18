@@ -36,6 +36,11 @@ public class ToolKitController {
         return Result.build("0", "ok", MapUtils.of("toolKitList", toolKitService.selectTookies(userId)));
     }
 
+    @RequestMapping("search")
+    public Result searchKey(@RequestParam Map params) {
+        return Result.build("0", "ok", MapUtils.of("toolKitList", toolKitService.searchKey(params)));
+    }
+
     @RequestMapping("updateCountById")
     public Result updateCountById(@RequestParam Map params) {
         return toolKitService.updateCountById(params) ? Result.build("0", "ok") : Result.build("1", "error");

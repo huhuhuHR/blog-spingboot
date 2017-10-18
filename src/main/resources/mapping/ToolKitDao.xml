@@ -24,6 +24,18 @@
         AND state = '1'
         ORDER BY click_count DESC
     </select>
+
+    <select id="searchKey" parameterType="java.util.Map" resultMap="ToolKitResultMap">
+        SELECT
+        <include refid="ToolKit_Column_List"/>
+        from user_toolkit
+        WHERE user_id = #{userId}
+        AND icon_name LIKE concat('%', #{searchKey},'%')
+        AND remove = '0'
+        AND state = '1'
+        ORDER BY click_count DESC
+    </select>
+
     <insert id="insertToolKit">
         insert into user_toolkit
         (id,user_id,icon_name,url,url_name,create_time,update_time,remove,state)

@@ -4,7 +4,7 @@ import com.huorong.domain.Article;
 import com.huorong.domain.Result;
 import com.huorong.service.ArticleService;
 import com.huorong.service.CommonService;
-import org.apache.commons.collections.MapUtils;
+import com.huorong.utils.MapUtils;
 import org.n3r.idworker.Id;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +30,19 @@ public class ArticleController {
 
     @RequestMapping("/personRecord")
     public Result checkLogin(@RequestParam Map params) {
-        String id = MapUtils.getString(params, "id");
+        String id = MapUtils.getStr(params, "id");
         log.info("霍荣" + id);
-        String cookie = commonService.CookieDeAESC(MapUtils.getString(params, "cookie"));
+        String cookie = commonService.CookieDeAESC(MapUtils.getStr(params, "cookie"));
         if (!articleService.checkCookieRecord(cookie)) {
             return Result.build("1", "error");
         }
         List<Article> article = articleService.selectArticleList(id);
-        return Result.build("0", "ok", com.huorong.utils.MapUtils.asMap("personRecordList", article));
+        return Result.build("0", "ok", MapUtils.asMap("personRecordList", article));
+    }
+
+    @RequestMapping("/search")
+    public Result searchByValue(@RequestParam Map params) {
+        return Result.build("0", "ok", MapUtils.asMap("personRecordList", articleService.searchByValue(params)));
     }
 
     @RequestMapping("/saveArticle")
@@ -54,7 +59,7 @@ public class ArticleController {
     @RequestMapping("/articleDetail")
     public Result articleDetail(@RequestParam String id) {
         Article article = articleService.articleDetail(id);
-        return article != null ? Result.build("0", "ok", com.huorong.utils.MapUtils.asMap("article", article))
+        return article != null ? Result.build("0", "ok", MapUtils.asMap("article", article))
                 : Result.build("1", "error");
     }
 
