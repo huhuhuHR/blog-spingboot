@@ -27,10 +27,10 @@ public class HomeHeadController {
     @RequestMapping("/headList")
     public Result headList(@RequestParam Map params) {
         String id = MapUtils.getStr(params, "id");
-        List<Map> article = homeHeadService.selectArticleList(id).subList(0, 3);
+        List<Map> article = homeHeadService.selectArticleList(id).subList(0, 5);
         List<WorkRecord> workRecords = workRecordService.selectRecord(id);
         if (workRecords.size() > 6) {
-            workRecords = workRecords.subList(0, 6);
+            workRecords = workRecords.subList(0, 10);
         }
         return Result.build("0", "ok", MapUtils.asMap("routerList", homeHeadService.routerList(params), "articleList",
                 article, "workRecords", workRecords));
