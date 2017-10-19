@@ -30,7 +30,7 @@
         <include refid="ToolKit_Column_List"/>
         from user_toolkit
         WHERE user_id = #{userId}
-        AND icon_name LIKE concat('%', #{searchKey},'%')
+        AND url_name LIKE concat('%', #{searchKey},'%')
         AND remove = '0'
         AND state = '1'
         ORDER BY click_count DESC
