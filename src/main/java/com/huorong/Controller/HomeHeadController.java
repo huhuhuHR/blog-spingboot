@@ -5,6 +5,8 @@ import com.huorong.domain.WorkRecord;
 import com.huorong.service.HomeHeadService;
 import com.huorong.service.WorkRecordService;
 import com.huorong.utils.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("home")
 public class HomeHeadController {
+    private static final Logger log = LoggerFactory.getLogger(HomeHeadController.class);
     @Autowired
     HomeHeadService homeHeadService;
     @Autowired
@@ -26,11 +29,17 @@ public class HomeHeadController {
 
     @RequestMapping("/headList")
     public Result headList(@RequestParam Map params) {
-        String id = MapUtils.getStr(params, "id");
-        List<Map> article = homeHeadService.selectArticleList(id).subList(0, 5);
-        List<WorkRecord> workRecords = workRecordService.selectRecord(id);
-        if (workRecords.size() > 6) {
-            workRecords = workRecords.subList(0, 10);
+        List<Map> article = null;
+        List<WorkRecord> workRecords = null;
+        try {
+            String id = MapUtils.getStr(params, "id");
+            article = homeHeadService.selectArticleList(id).subList(0, 5);
+            workRecords = workRecordService.selectRecord(id);
+            if (workRecords.size() > 6) {
+                workRecords = workRecords.subList(0, 10);
+            }
+        } catch (Exception e) {
+            log.debug("huorong" + e);
         }
         return Result.build("0", "ok", MapUtils.asMap("routerList", homeHeadService.routerList(params), "articleList",
                 article, "workRecords", workRecords));
