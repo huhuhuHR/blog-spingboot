@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.ResumeDao">
+    <resultMap id="ResumeResultMap" type="com.huorong.domain.Resume">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="native_place" property="nativePlace"/>
+        <result column="age" property="age"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="study_level" property="studyLevel"/>
+        <result column="work_year" property="workYear"/>
+        <result column="skills" property="skills"/>
+        <result column="assessment" property="assessment"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="ResumeExperienceResultMap" type="com.huorong.domain.Experience">
+        <result column="id" property="id"/>
+        <result column="resume_id" property="resumeId"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="experience_record" property="experienceRecord"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Experience_Column_List">
+        id,resume_id,start_time,end_time,experience_record,create_time,update_time
+    </sql>
+
+    <sql id="Resume_Column_List">
+        id,user_id,name,sex,native_place,age,phone_number,study_level,work_year,skills,assessment,create_time,update_time
+    </sql>
+
+    <insert id="submitResume">
+        INSERT into user_resume
+        (id,user_id,name,sex,native_place,age,phone_number,study_level,work_year,skills,assessment,create_time,update_time)
+        VALUES (#{id},#{userId},#{name},#{sex},#{nativePlace},#{age},#{phoneNumber},#{studyLevel},#{workYear},#{skills},#{assessment},now(),now())
+    </insert>
+
+    <insert id="submitexpErience">
+        INSERT INTO user_resume_experience
+        (id,resume_id,start_time,end_time,experience_record,create_time,update_time)
+        VALUES (#{id},#{resumeId},#{startTime},#{endTime},#{experienceRecord},now(),now())
+    </insert>
+    <delete id="deleteByUserId" parameterType="java.lang.String">
+        DELETE FROM user_resume
+        WHERE user_id = #{userId}
+    </delete>
+    <select id="selectExperienceByUserId" parameterType="java.lang.String" resultMap="ResumeExperienceResultMap">
+        SELECT
+        ure.*
+        FROM user_resume ur, user_resume_experience ure
+        WHERE ur.id = ure.resume_id
+        AND ur.user_id = #{userId}
+    </select>
+
+    <select id="selectResumeByUserId" parameterType="java.lang.String" resultMap="ResumeResultMap">
+        SELECT
+        <include refid="Resume_Column_List"></include>
+        FROM user_resume
+        WHERE user_id = #{userId}
+        ORDER BY update_time DESC
+        LIMIT 1
+    </select>
+
+</mapper>

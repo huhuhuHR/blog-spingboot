@@ -1,10 +1,12 @@
 package com.huorong.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -201,5 +203,31 @@ public class MapUtils {
         }
 
         return params;
+    }
+
+    public static Map<String, Object> objectToMap(Object obj) throws Exception {
+        if (obj == null) {
+            return null;
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+        }
+        return map;
+    }
+
+    /**
+     * Map(key json格式的出参) - jsonObject - Map
+     * 
+     * @param params
+     * @param jsonKey
+     * @return
+     */
+    public static Map jsonToMap(Map params, String jsonKey) {
+        JSONObject personDetailMap = JSON.parseObject(params.get(jsonKey).toString());
+        Map personDetail = personDetailMap;
+        return personDetail;
     }
 }
