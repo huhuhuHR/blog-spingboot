@@ -3,6 +3,7 @@ package com.huorong.Controller;
 import com.huorong.domain.Result;
 import com.huorong.service.CommonService;
 import com.huorong.service.LoginService;
+import com.huorong.service.redis.RedisService;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,8 @@ public class LoginController {
     LoginService loginService;
     @Autowired
     CommonService commonService;
+    @Autowired
+    RedisService redisService;
 
     @RequestMapping("/login")
     public Result checkLogin(@RequestParam Map params) {
@@ -34,6 +37,9 @@ public class LoginController {
         String id = MapUtils.getString(result, "id");
         String cookie = UUID.randomUUID().toString();
         loginService.insertCokie(com.huorong.utils.MapUtils.of("id", id, "cookie", cookie, "time", "30"));
+        redisService.setStrExpreHour("loginKey", cookie, 1);
+        // System.out.println(">>>REDIS>>>>>>>" +
+        // redisService.getStr("loginKey"));
         return Result.build("0", "ok",
                 com.huorong.utils.MapUtils.asMap("cookie", commonService.CookieEeAESC(cookie), "id", id));
     }
