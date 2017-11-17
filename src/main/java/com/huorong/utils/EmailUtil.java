@@ -5,11 +5,15 @@ package com.huorong.utils;
  */
 
 import org.apache.commons.mail.HtmlEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by beck on 2015/11/25.
  */
 public class EmailUtil {
+    private static final Logger log = LoggerFactory.getLogger(EmailUtil.class);
+
     public static void sendEmail() {
         HtmlEmail email = new HtmlEmail();
         email.setHostName("smtp.163.com");
@@ -22,6 +26,7 @@ public class EmailUtil {
             email.setTextMsg("have some update");
             email.send();
         } catch (Exception e) {
+            log.error("email send error", e);
             e.printStackTrace();
         }
 

@@ -2,6 +2,8 @@ package com.huorong.Jobs;
 
 import com.alibaba.fastjson.JSON;
 import com.huorong.service.redis.RedisService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,8 @@ import static com.huorong.utils.HttpUtils.sendGet;
  */
 @Component
 public class EmailJob {
-    public final static long ONE_Minute = 60 * 1000;
+    private static final Logger log = LoggerFactory.getLogger(EmailJob.class);
+    private final static long ONE_Minute = 60 * 1000;
 
 
     @Scheduled(fixedRate = ONE_Minute)
@@ -33,7 +36,7 @@ public class EmailJob {
             sendEmail();
             redisService.setStr("stockNum", map.get("pageCount").toString());
         }
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ">>fixedRate执行....");
+        log.debug(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ">>fixedRate执行....");
     }
 
 }
