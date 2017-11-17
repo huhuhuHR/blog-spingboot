@@ -1,7 +1,7 @@
 package com.huorong.Jobs;
 
 import com.alibaba.fastjson.JSON;
-import com.huorong.service.redis.RedisService;
+import com.huorong.service.redis.Redis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,16 +25,16 @@ public class EmailJob {
 
     @Scheduled(fixedRate = ONE_Minute)
     public void fixedRateJob() {
-        RedisService redisService = new RedisService();
+        Redis redisService = new Redis();
         String url = "https://gupiao.jd.com/package/historyConverts?callback=jQuery18301490232655384114_1510649363890&pin=%E8%8A%B3%E8%8D%89101&pageNum=1&_=1510649503271";
         String s = sendGet(url, "");
         String result = s.substring(s.indexOf("{"), s.lastIndexOf(")"));
         System.out.println(result);
         Map map = JSON.parseObject(result, Map.class);
-        String oldStockNum = redisService.getStr("stockNum");
-        if (oldStockNum != map.get("pageCount").toString()) {
+        String oldStockNum = redisService.get("stockNum");
+        if (!oldStockNum.equals(map.get("pageCount").toString())) {
             sendEmail();
-            redisService.setStr("stockNum", map.get("pageCount").toString());
+            redisService.set("stockNum", map.get("pageCount").toString());
         }
         log.debug(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ">>fixedRate执行....");
     }
