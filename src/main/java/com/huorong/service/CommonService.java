@@ -1,8 +1,7 @@
 package com.huorong.service;
 
+import com.huorong.utils.secret.EDUtils;
 import org.springframework.stereotype.Service;
-
-import com.huorong.utils.secret.AesUtils;
 
 /**
  * Created by huorong on 17/9/29.
@@ -11,7 +10,7 @@ import com.huorong.utils.secret.AesUtils;
 public class CommonService {
     public String CookieDeAESC(String cookie) {
         try {
-            cookie = AesUtils.decodeKey(cookie);
+            cookie = EDUtils.decrypt(cookie);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -21,7 +20,7 @@ public class CommonService {
 
     public String CookieEeAESC(String cookie) {
         try {
-            cookie = AesUtils.encodeKey(cookie);
+            cookie = EDUtils.encrypt(cookie);
         } catch (Exception e) {
             e.printStackTrace();
         }
