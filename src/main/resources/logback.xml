@@ -1,45 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
-<configuration scan="true" scanPeriod="60 seconds">
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+<!--scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+    scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+    debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+    <configuration scan="true" scanPeriod="60 seconds" debug="false"> -->
+<configuration>
+
+    <!-- 默认上下文名称为“default”。设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。 -->
+    <contextName>huhuhuHR</contextName>
+
+
+    <!-- 输出日志到控制台 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--对日志进行格式化 -->
         <encoder>
-            <pattern>%d{yyyy-M-d HH:mm:ss} %t %p %m%n</pattern>
+            <!-- %d{yyyy/MM/dd HH:mm:ss.SSS}:时间，年-月-日 时:分:秒.毫秒
+                 %cn:<contextName>节点的值
+                 %thread:线程名
+                 %-5level:日志级别
+                 %logger:完整的类路径；%logger{0}:只显示类名
+                 %msg:日志内容
+                 %n:换行 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %cn [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="springboot"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- <Encoding>UTF-8</Encoding> -->
+    <!-- 按“天”和“大小”生成日志文件 -->
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志存储路径，以及日志名称 -->
+        <file>
+            logs/logback_huhuhuHR.log
+        </file>
+        <!-- 基于时间的生成日志文件策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>logs/logback/springboot_class_%d{yyyy-M-d}.log
-            </FileNamePattern>
-            <MaxHistory>10</MaxHistory>
+            <!-- 按“天”生成日志文件，"%i"代表第几个文件（从0自增），并压缩成.zip包 -->
+            <fileNamePattern>logs/logback_huhuhuHR-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!-- 保留15天 -->
+            <maxHistory>15</maxHistory>
+            <!-- 在基于时间的基础上，基于文件大小生成日志文件策略 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 单个文件不能大于30MB -->
+                <maxFileSize>30MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
+        <!--对日志进行格式化 -->
         <encoder>
-            <pattern>%d{yyyy-M-d HH:mm:ss} %t %p %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %cn [%thread] %-5level %logger - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
-    <appender name="huorong"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--address logs-->
-            <FileNamePattern>logs/logback/huorong_springboot_%d{yyyy-M-d}.log
-            </FileNamePattern>
-            <MaxHistory>10</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-M-d HH:mm:ss} %t %p %m%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="org.springframework.boot" level="debug"
-            additivity="false">
-        <appender-ref ref="springboot"/>
-    </logger>
-    <!-- name包必须能够扫描到所以类，包括启动类 -->
-    <logger name="com.huorong"
-            level="debug" additivity="false">
-        <appender-ref ref="huorong"/>
-    </logger>
-    <root level="info">
-        <appender-ref ref="stdout"/>
+
+    <!-- <root>也是<loger>元素，但是它是根loger。只有一个level属性
+         level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF-->
+    <root level="DEBUG">
+        <!-- 启用控制台输出日志 -->
+        <appender-ref ref="console"/>
+        <!-- 启用滚动文档输出日志 -->
+        <appender-ref ref="rollingFile"/>
     </root>
 </configuration>

@@ -4,8 +4,7 @@ import com.huorong.dao.LoginDao;
 import com.huorong.domain.User;
 import com.huorong.service.LoginService;
 import com.huorong.utils.MapUtils;
-import com.huorong.utils.secret.AESKey;
-import com.huorong.utils.secret.AESUtil;
+import com.huorong.utils.secret.EDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,9 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Map checkUser(String name, String password) {
         try {
-            String nameE = AESUtil.encrypt(name, AESKey.AES_Key);
+            String nameE = EDUtils.encrypt(name);
             User user = loginDao.findUserByName(nameE);
-            if (password.equals(AESUtil.decrypt(user.getPassword(), AESKey.AES_Key))) {
+            if (password.equals(EDUtils.decrypt(user.getPassword()))) {
                 return MapUtils.of("flag", true, "id", user.getId());
             }
         } catch (Exception e) {

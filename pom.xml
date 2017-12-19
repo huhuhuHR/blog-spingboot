@@ -74,6 +74,13 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.bingoohuang/java-utils -->
+        <dependency>
+            <groupId>com.github.bingoohuang</groupId>
+            <artifactId>java-utils</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>

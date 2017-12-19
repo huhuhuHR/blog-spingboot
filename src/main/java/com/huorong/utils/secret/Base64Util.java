@@ -62,4 +62,8 @@ public abstract class Base64Util {
         return new String(b, ENCODING);
     }
 
+    public static void main(String[] args) throws Exception {
+        System.out.println(encode("huorong"));
+    }
+
 }
