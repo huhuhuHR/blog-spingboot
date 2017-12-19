@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.EmailDao">
+    <resultMap id="BaseResultMap" type="com.huorong.domain.AdminEmail">
+        <result column="email_name" property="name"/>
+        <result column="email_auth_password" property="authPassword"/>
+    </resultMap>
+    <parameterMap id="adminEmail" type="com.huorong.domain.AdminEmail"/>
+    <sql id="Base_Column_List">
+        email_name,email_auth_password
+    </sql>
+
+    <select id="selectSystemEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from blog_email_admin
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package com.huorong.Controller;
+package com.huorong.Controller.blog1;
 
 import com.huorong.domain.Result;
 import com.huorong.service.CommonService;

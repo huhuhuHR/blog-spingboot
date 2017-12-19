@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.RegistDao">
+    <resultMap id="blogUser" type="com.huorong.domain.BlogUser">
+        <result column="user_id" property="userId"/>
+        <result column="blog_name" property="blogName"/>
+        <result column="blog_password" property="blogPassword"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="blog_create_time" property="blogCreateTime"/>
+        <result column="blog_update_time" property="blogUpdateTime"/>
+        <result column="blog_state" property="state"/>
+        <result column="level" property="level"/>
+        <result column="val1" property="val1"/>
+        <result column="val2" property="val2"/>
+    </resultMap>
+    <resultMap id="blogUserInfo" type="com.huorong.domain.BlogUserInfo">
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_desc" property="userDesc"/>
+        <result column="user_photoName" property="userPhotoName"/>
+        <result column="blog_create_time" property="createTime"/>
+        <result column="blog_update_time" property="updateTime"/>
+    </resultMap>
+    <parameterMap id="blogUser" type="com.huorong.domain.BlogUser"/>
+    <sql id="blog_user_List">
+        user_id,blog_name,blog_password,user_email,blog_create_time,blog_update_time,blog_state,level,val1,val2
+    </sql>
+    <sql id="user_info_List">
+        user_id,user_name,user_desc,user_photoName,blog_create_time,blog_update_time
+    </sql>
+    <select id="selectBlogByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+      SELECT count(*)
+        FROM blog_user
+        WHERE blog_name = #{blogName}
+    </select>
+    <select id="selectBlogByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM blog_user
+        WHERE user_email = #{blogEmail}
+    </select>
+    <insert id="registBlog" parameterType="java.util.Map">
+        INSERT INTO
+          blog_user(user_id,blog_name,blog_password,user_email,blog_create_time,blog_update_time,blog_state,level)
+        VALUES (#{userId},#{blogName},#{blogPassword},#{blogEmail},now(),now(),'0','3')
+    </insert>
+    <insert id="insertEmailLog" parameterType="java.util.Map">
+        INSERT INTO blog_email_active
+          (user_id,createTime,uuid,state)
+          VALUES (#{userId},now(),#{uuid},#{state})
+    </insert>
+</mapper>

@@ -1,0 +1,12 @@
+CREATE TABLE `blog_user` (
+    ,`user_id` varchar(20) NOT NULL COMMENT '用户id',
+    `blog_name` varchar(20) NOT NULL COMMENT '博客名字',
+    `blog_password` varchar(20) NOT NULL COMMENT '博客密码',
+    `user_email` varchar(20) NOT NULL COMMENT '注册用的email',
+    `blog_create_time` datetime NOT NULL COMMENT '创建时间',
+    `blog_update_time` datetime NOT NULL COMMENT '更新时间',
+    `blog_state` char(1) NOT NULL COMMENT '激活状态',
+    `level` char(1) NOT NULL COMMENT 'blog权限',
+    `val1` varchar(20) DEFAULT NULL COMMENT '预留字段',
+    `val2` varchar(20) DEFAULT NULL COMMENT '预留字段',
+    PRIMARY KEY (`user_id`)) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '博客表’;

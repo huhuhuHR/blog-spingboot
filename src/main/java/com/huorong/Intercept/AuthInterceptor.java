@@ -24,39 +24,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        try {
-            if (redisService == null) {// 解决service为null无法注入问题
-                System.out.println("redisService is null!!!");
-                BeanFactory factory = WebApplicationContextUtils
-                        .getRequiredWebApplicationContext(request.getServletContext());
-                redisService = (RedisService) factory.getBean("redisService");
-            }
-            if (commonService == null) {// 解决service为null无法注入问题
-                System.out.println("commonService is null!!!");
-                BeanFactory factory = WebApplicationContextUtils
-                        .getRequiredWebApplicationContext(request.getServletContext());
-                commonService = (CommonService) factory.getBean("commonService");
-            }
-            System.out.println(">>>MyInterceptor1>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
-            String key = redisService.getStr("loginKey");
-            if (key != null) {
-                Cookie[] cookies = request.getCookies();
-                boolean flag = false;
-                for (Cookie cookie : cookies) {
-                    if (commonService.CookieDeAESC(cookie.getValue()).equals(key)) {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (flag) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        response.sendError(250);
-        return false;
+        System.out.println(">>>MyInterceptor1>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
+        return true;
     }
 
     @Override

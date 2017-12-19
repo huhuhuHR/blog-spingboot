@@ -1,4 +1,4 @@
-package com.huorong.Controller;
+package com.huorong.Controller.blog1;
 
 import com.huorong.domain.Result;
 import com.huorong.domain.WorkRecord;
@@ -33,6 +33,8 @@ public class HomeHeadController {
         List<WorkRecord> workRecords = null;
         try {
             String id = MapUtils.getStr(params, "id");
+            id = "248886518218567680";
+            params.put("id", "248886518218567680");
             article = homeHeadService.selectArticleList(id).subList(0, 5);
             workRecords = workRecordService.selectRecord(id);
             if (workRecords.size() > 6) {
