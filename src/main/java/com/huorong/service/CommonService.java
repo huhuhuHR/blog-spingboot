@@ -2,8 +2,7 @@ package com.huorong.service;
 
 import org.springframework.stereotype.Service;
 
-import com.huorong.utils.secret.AESKey;
-import com.huorong.utils.secret.AESUtil;
+import com.huorong.utils.secret.AesUtils;
 
 /**
  * Created by huorong on 17/9/29.
@@ -12,7 +11,7 @@ import com.huorong.utils.secret.AESUtil;
 public class CommonService {
     public String CookieDeAESC(String cookie) {
         try {
-            cookie = AESUtil.decrypt(cookie, AESKey.AES_Key);
+            cookie = AesUtils.decodeKey(cookie);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -22,7 +21,7 @@ public class CommonService {
 
     public String CookieEeAESC(String cookie) {
         try {
-            cookie = AESUtil.encrypt(cookie, AESKey.AES_Key);
+            cookie = AesUtils.encodeKey(cookie);
         } catch (Exception e) {
             e.printStackTrace();
         }
