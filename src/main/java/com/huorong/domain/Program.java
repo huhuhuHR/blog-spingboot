@@ -1,12 +1,18 @@
 package com.huorong.domain;
 
+import com.github.bingoohuang.excel2beans.CellData;
+import com.github.bingoohuang.excel2beans.CellDataMapAttachable;
+import com.github.bingoohuang.excel2beans.ExcelRowIgnorable;
+import com.github.bingoohuang.excel2beans.ExcelRowRef;
+import com.github.bingoohuang.excel2beans.annotations.ExcelColIgnore;
 import com.github.bingoohuang.excel2beans.annotations.ExcelColTitle;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
-public class Program {
+public class Program extends ExcelRowRef implements ExcelRowIgnorable, CellDataMapAttachable {
     @ExcelColTitle("序号")
     String order;
     @ExcelColTitle("节目名称")
@@ -45,4 +51,28 @@ public class Program {
     List<String> tvURL;
     @ExcelColTitle("手机端")
     List<String> iphoneURL;
+    @ExcelColIgnore
+    List<Map> epside;
+    @ExcelColIgnore
+    private String error;
+    @ExcelColIgnore
+    private Map cellDataMap;
+
+    public Program() {
+    }
+
+    @Override
+    public String error() {
+        return error;
+    }
+
+    @Override
+    public boolean ignoreRow() {
+        return false;
+    }
+
+    @Override
+    public void attachCellDataMap(Map<String, CellData> cellDataMap) {
+        this.cellDataMap = cellDataMap;
+    }
 }
