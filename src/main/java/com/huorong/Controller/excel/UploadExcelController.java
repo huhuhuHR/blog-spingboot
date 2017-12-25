@@ -72,19 +72,26 @@ public class UploadExcelController {
         String fileExelName = fileExel.getOriginalFilename();
         List<Program> programs = new ArrayList<>();
         try {
+            // 前台上传的文件转换成bean
             ExcelToBeans excelToBeans = new ExcelToBeans(fileExel.getInputStream());
             programs = excelToBeans.convert(Program.class);
+            // 业务因为去额外的行，自己定义的的特定excel
             programs = uploadExcelService.filterByOrderNotNull(programs);
+            // list数据结构去多余的列
             uploadExcelService.rmTailWithinList(programs);
             val cellDatas = Sets.<CellData> newIdentityHashSet();
             for (Program program : programs) {
+                // 业务层校验，有错的bean，setError
                 if ("样例1".equals(program.getProgramName())) {
                     program.setError("样例1必须死");
+                    // 加批注
                     val cellData = uploadExcelService.appendComment(program, program.getError(), "programName");
                     cellDatas.add(cellData);
                 }
             }
+            // 写批注
             ExcelToBeansUtils.writeRedComments(excelToBeans.getWorkbook(), cellDatas);
+            // 去掉正确行
             excelToBeans.removeOkRows(Program.class, programs);
             Jedis jedis = new Jedis();
             String key = "huorong";
