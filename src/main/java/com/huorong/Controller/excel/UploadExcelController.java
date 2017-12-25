@@ -11,14 +11,13 @@ import com.huorong.domain.Program;
 import com.huorong.domain.Result;
 import com.huorong.service.UploadExcelService;
 import com.huorong.service.redis.Redis;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.Jedis;
 
@@ -114,5 +113,18 @@ public class UploadExcelController {
         val stream = new ByteArrayInputStream(bytes);
         val redisWorkbook = WorkbookFactory.create(stream);
         uploadExcelService.closeStream(response, redisWorkbook, "aaa.xlsx");
+    }
+
+    @SneakyThrows
+    @RequestMapping(value = "downloadTemplate/{id}", method = RequestMethod.GET)
+    public Result downloadTemplate(HttpServletResponse response, @PathVariable String id) {
+        String name = "0".equals(id) ? "标准版.xlsx" : "1".equals(id) ? "简单版.xlsx" : "";
+        @Cleanup
+        val workbook = ExcelToBeansUtils.getClassPathWorkbook(name);
+        if (workbook == null) {
+            return Result.build("0", "error");
+        }
+        uploadExcelService.closeStream(response, workbook, name);
+        return Result.build("0", "error");
     }
 }
