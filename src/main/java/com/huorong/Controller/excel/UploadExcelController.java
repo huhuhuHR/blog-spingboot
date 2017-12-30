@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -126,5 +127,18 @@ public class UploadExcelController {
         }
         uploadExcelService.closeStream(response, workbook, name);
         return Result.build("0", "error");
+    }
+
+    @RequestMapping(value = "fileZip", method = RequestMethod.POST)
+    public Result uploadZip(@RequestParam("fileZip") MultipartFile fileZip) throws Exception {
+        String fileExelName = fileZip.getOriginalFilename();
+        Map<String, List> map = uploadExcelService.getPhotosByProgramName(fileZip, "0");
+        for (Map.Entry<String, List> stringListEntry : map.entrySet()) {
+            String key = stringListEntry.getKey();
+            System.out.println(key);
+            List value = stringListEntry.getValue();
+            value.forEach(System.out::println);
+        }
+        return Result.build("0", "ok");
     }
 }
