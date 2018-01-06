@@ -131,7 +131,7 @@
         <dependency>
             <groupId>com.github.bingoohuang</groupId>
             <artifactId>excel2javabeans</artifactId>
-            <version>0.0.16</version>
+            <version>0.0.19</version>
         </dependency>
 
     </dependencies>
