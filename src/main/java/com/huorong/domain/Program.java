@@ -56,7 +56,7 @@ public class Program extends ExcelRowRef implements ExcelRowIgnorable, CellDataM
     @ExcelColIgnore
     private String error;
     @ExcelColIgnore
-    private Map cellDataMap;
+    private Map<String, CellData> cellDataMap;
 
     public Program() {
     }
