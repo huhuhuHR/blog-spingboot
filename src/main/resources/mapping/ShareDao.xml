@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.ShareDao">
+    <resultMap id="blogShare" type="com.huorong.domain.BlogShare">
+        <result column="user_id" property="userId"/>
+        <result column="share_id" property="shareId"/>
+        <result column="share_url" property="shareUrl"/>
+        <result column="share_title" property="shareTitle"/>
+        <result column="share_desc" property="shareDesc"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="record_count" property="recordCount"/>
+        <result column="image_id" property="imageId"/>
+        <result column="imageName" property="imageName"/>
+    </resultMap>
+    <sql id="share_colmn">
+      user_id,share_id,share_url,share_title,share_desc,create_time,update_time,record_count,image_id
+    </sql>
+    <insert id="insertShare"
+            parameterType="java.util.Map">
+        INSERT INTO blog_user_share
+        (user_id, share_id, share_url, share_title, share_desc, create_time, update_time, record_count)
+        VALUES (#{userId},#{shareId},#{shareUrl},#{shareTitle},#{shareDesc},now(),now(),#{recordCount});
+    </insert>
+    <select id="selectNewestShare" parameterType="java.util.Map" resultMap="blogShare">
+        SELECT
+        bus.user_id 'userId',
+        bus.share_id 'shareId',
+        bus.share_url 'shareUrl',
+        bus.share_title 'shareTitle',
+        bus.share_desc 'shareDesc',
+        bus.create_time 'createTime',
+        bus.update_time 'updateTime',
+        bus.record_count 'recordCount',
+        bus.image_id 'imageId',
+        bui.image_name 'imageName'
+        FROM
+        blog_user_share bus
+        LEFT JOIN
+        blog_user_image bui
+        ON
+        bui.image_id = bus.image_id
+        <if test="type != null">
+            ORDER BY bus.update_time DESC
+        </if>
+        <if test="type == null">
+            ORDER BY bus.record_count DESC
+        </if>
+    </select>
+</mapper>

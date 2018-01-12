@@ -10,4 +10,8 @@ public interface RegistDao {
     int registBlog(Map params);
 
     int insertEmailLog(Map params);
+
+    String selectUserId(String uuid);
+
+    int toActive(String userId);
 }
