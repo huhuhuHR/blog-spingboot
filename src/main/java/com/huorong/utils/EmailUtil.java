@@ -46,7 +46,7 @@ public class EmailUtil {
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject("账号激活邮件");
             msg.setSentDate(new Date());
-            msg.setContent(content, "text/html;charset=utf-8");
+            msg.setContent("<div align=\"center\">" + content + "</div>", "text/html;charset=utf-8");
             msg.saveChanges();
             Transport.send(msg);
             log.info("admin发送激活邮件给{},内容{}", toEmail, content);
@@ -55,6 +55,12 @@ public class EmailUtil {
             return false;
         }
         return true;
+    }
+
+    public static void sendEmailAsyn(String toEmail, String msg, AdminEmail adminEmail) {
+        Thread t = new Thread(() -> sendEmail(toEmail, msg, adminEmail));
+        t.start();
+        t.interrupt();
     }
 
     /**

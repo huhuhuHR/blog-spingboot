@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.huorong.domain.AdminEmail">
         <result column="email_name" property="name"/>
         <result column="email_auth_password" property="authPassword"/>
-        <result column="evn" property="authPassword"/>
+        <result column="evn" property="evn"/>
     </resultMap>
     <parameterMap id="adminEmail" type="com.huorong.domain.AdminEmail"/>
     <sql id="Base_Column_List">
