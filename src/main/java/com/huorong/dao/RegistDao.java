@@ -2,6 +2,7 @@ package com.huorong.dao;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 public interface RegistDao {
@@ -20,4 +21,6 @@ public interface RegistDao {
     Map getLoginInfo(Map params);
 
     String selectUUidByUserId(String userId);
+
+    List<Map> getMembers();
 }

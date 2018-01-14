@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -148,5 +150,13 @@ public class RegistService {
         }
         // 未注册
         return Result.build("0", "ok", MapUtils.of("result", "0", "msg", "无效用户名"));
+    }
+
+    public List<Map> getMembers() {
+        List<Map> members = registDao.getMembers();
+        if (members == null) {
+            members = new ArrayList<>();
+        }
+        return members;
     }
 }

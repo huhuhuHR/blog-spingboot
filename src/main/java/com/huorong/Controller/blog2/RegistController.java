@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -54,5 +55,11 @@ public class RegistController {
     @RequestMapping("getLoginInfo")
     public Result getLoginInfo(@RequestParam Map params) {
         return registService.getLoginInfo(params);
+    }
+
+    @RequestMapping(value = "getMembers", method = RequestMethod.POST)
+    public Result getMembers() {
+        List<Map> members = registService.getMembers();
+        return Result.build("0", "ok", MapUtils.of("size", members.size(), "members", members));
     }
 }

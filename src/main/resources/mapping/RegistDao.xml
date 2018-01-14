@@ -72,4 +72,11 @@
         FROM blog_email_active
         WHERE user_id=#{userId}
     </select>
+    <select id="getMembers" resultType="java.util.Map">
+        SELECT
+          blog_name  'name',
+          user_email 'email'
+        FROM blog_user
+        ORDER BY blog_create_time
+    </select>
 </mapper>
