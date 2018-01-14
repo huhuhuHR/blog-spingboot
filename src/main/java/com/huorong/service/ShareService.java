@@ -42,4 +42,13 @@ public class ShareService {
         }
         return shareDao.selectNewestShare(params);
     }
+
+    public List<Map> selectMyShare(String userId) {
+        return shareDao.selectMyShare(userId);
+    }
+
+    public boolean deleteMyShare(String userId, String shareId) {
+        return shareDao.deleteMyShare(userId, shareId) == 1;
+
+    }
 }

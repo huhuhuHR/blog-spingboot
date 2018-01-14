@@ -19,8 +19,11 @@
         SELECT
         <include refid="ToolKit_Column_List"/>
         from user_toolkit
-        WHERE user_id = #{userId}
-        AND remove = '0'
+        WHERE
+        remove = '0'
+        <if test="userId != 'all'">
+            AND user_id = #{userId}
+        </if>
         AND state = '1'
         ORDER BY click_count DESC
     </select>
@@ -29,8 +32,7 @@
         SELECT
         <include refid="ToolKit_Column_List"/>
         from user_toolkit
-        WHERE user_id = #{userId}
-        AND url_name LIKE concat('%', #{searchKey},'%')
+        WHERE url_name LIKE concat('%', #{searchKey},'%')
         AND remove = '0'
         AND state = '1'
         ORDER BY click_count DESC
@@ -51,7 +53,6 @@
         SET click_count = (click_count + 1),
             update_time = now()
         WHERE id = #{id}
-        and user_id = #{userId}
         AND remove = '0'
         AND state = '1'
     </update>

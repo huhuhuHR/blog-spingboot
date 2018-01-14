@@ -40,6 +40,7 @@
         blog_user_image bui
         ON
         bui.image_id = bus.image_id
+        WHERE state = '1'
         <if test="type != null">
             ORDER BY bus.update_time DESC
         </if>
@@ -47,4 +48,19 @@
             ORDER BY bus.record_count DESC
         </if>
     </select>
+    <select id="selectMyShare" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+          share_id     'shareId',
+          share_title   'shareTitle'
+        FROM blog_user_share
+        WHERE state = '1'
+        AND user_id = #{userId}
+    </select>
+    <update id="deleteMyShare" parameterType="java.lang.String">
+        UPDATE blog_user_share
+        SET state = '0'
+        WHERE user_id = #{userId}
+        AND share_id = #{shareId}
+        AND state = '1'
+    </update>
 </mapper>
