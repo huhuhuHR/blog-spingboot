@@ -30,12 +30,16 @@ public class EmailUtil {
             props.put("mail.smtp.host", HOST);// 设置服务器地址
             props.put("mail.smtp.port", PORT);// 设置端口
             props.put("mail.store.protocol", PROTOCOL);// 设置协议
+            log.debug("测试");
+            log.info("测试");
         } else {
             props.setProperty("mail.smtp.host", HOST);
             props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
             props.setProperty("mail.smtp.socketFactory.fallback", "false");
             props.setProperty("mail.smtp.port", PORT);
             props.setProperty("mail.smtp.socketFactory.port", PORT);
+            log.debug("生产");
+            log.info("生产");
         }
         return Session.getDefaultInstance(props, new Authenticator() {
             @Override
@@ -59,6 +63,7 @@ public class EmailUtil {
             msg.saveChanges();
             Transport.send(msg);
             log.info("admin发送激活邮件给{},内容{}", toEmail, content);
+            log.debug("admin发送激活邮件给{},内容{}", toEmail, content);
         } catch (MessagingException mex) {
             mex.printStackTrace();
             return false;
