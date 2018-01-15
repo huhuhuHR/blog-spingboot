@@ -44,6 +44,16 @@
         bui.image_id = bus.image_id,
         blog_user bu
         WHERE state = '1'
+        <if test="searchKey != null">
+            AND
+            (
+            bus.share_title LIKE concat('%', #{searchKey}, '%')
+            ||
+            bu.blog_name LIKE concat('%', #{searchKey}, '%')
+            ||
+            bus.share_desc LIKE concat('%', #{searchKey}, '%')
+            )
+        </if>
         AND bu.user_id = bus.user_id
         <if test="type != null">
             ORDER BY bus.create_time DESC

@@ -39,8 +39,8 @@ public class ShareService {
 
     public List<BlogShare> selectNewestShare(Map params) {
         String type = MapUtils.getStr(params, "type");
-        if ("1".equals(type)) {
-            params = new HashMap();
+        if ("0".equals(type)) {
+            params.remove("type");
         }
         List<BlogShare> shares = shareDao.selectNewestShare(params);
         shares.stream().forEach((BlogShare blogShare) -> {
