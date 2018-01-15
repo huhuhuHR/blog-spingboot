@@ -4,6 +4,7 @@ import com.huorong.domain.Result;
 import com.huorong.service.CommonService;
 import com.huorong.service.ToolKitService;
 import com.huorong.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class ToolKitController {
 
     @RequestMapping("selectTookies")
     public Result selectTookies(@RequestParam String userId) {
+        userId = StringUtils.isEmpty(userId) ? "all" : userId;
         return Result.build("0", "ok", MapUtils.of("toolKitList", toolKitService.selectTookies(userId)));
     }
 

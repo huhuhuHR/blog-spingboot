@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huorong.dao.ShareDao">
+    <resultMap id="blogShare" type="com.huorong.domain.BlogShare">
+        <result column="user_id" property="userId"/>
+        <result column="share_id" property="shareId"/>
+        <result column="share_url" property="shareUrl"/>
+        <result column="share_title" property="shareTitle"/>
+        <result column="share_desc" property="shareDesc"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="record_count" property="recordCount"/>
+        <result column="image_id" property="imageId"/>
+        <result column="imageName" property="imageName"/>
+        <result column="userName" property="userName"/>
+    </resultMap>
+    <sql id="share_colmn">
+      user_id,share_id,share_url,share_title,share_desc,create_time,update_time,record_count,image_id
+    </sql>
+    <insert id="insertShare"
+            parameterType="java.util.Map">
+        INSERT INTO blog_user_share
+        (user_id, share_id, share_url, share_title, share_desc, create_time, update_time, record_count)
+        VALUES (#{userId},#{shareId},#{shareUrl},#{shareTitle},#{shareDesc},now(),now(),#{recordCount});
+    </insert>
+    <select id="selectNewestShare" parameterType="java.util.Map" resultMap="blogShare">
+        SELECT
+        bus.user_id 'userId',
+        bus.share_id 'shareId',
+        bus.share_url 'shareUrl',
+        bus.share_title 'shareTitle',
+        bus.share_desc 'shareDesc',
+        bus.create_time 'createTime',
+        bus.update_time 'updateTime',
+        bus.record_count 'recordCount',
+        bus.image_id 'imageId',
+        bui.image_name 'imageName',
+        bu.blog_name 'userName'
+        FROM
+        blog_user_share bus
+        LEFT JOIN
+        blog_user_image bui
+        ON
+        bui.image_id = bus.image_id,
+        blog_user bu
+        WHERE state = '1'
+        AND bu.user_id = bus.user_id
+        <if test="type != null">
+            ORDER BY bus.create_time DESC
+        </if>
+        <if test="type == null">
+            ORDER BY bus.record_count DESC
+        </if>
+    </select>
+    <select id="selectMyShare" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+          share_id     'shareId',
+          share_title   'shareTitle'
+        FROM blog_user_share
+        WHERE state = '1'
+        AND user_id = #{userId}
+    </select>
+    <update id="deleteMyShare" parameterType="java.lang.String">
+        UPDATE blog_user_share
+        SET state = '0'
+        WHERE user_id = #{userId}
+        AND share_id = #{shareId}
+        AND state = '1'
+    </update>
+
+    <update id="updateCountByShareId" parameterType="java.lang.String">
+        UPDATE blog_user_share
+        SET record_count = (record_count + 1),
+        update_time = now()
+        WHERE share_id = #{shareId}
+    </update>
+</mapper>

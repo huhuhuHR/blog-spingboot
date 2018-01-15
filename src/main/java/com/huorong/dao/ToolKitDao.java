@@ -1,6 +1,7 @@
 package com.huorong.dao;
 
 import com.huorong.domain.Toolkit;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,9 @@ import java.util.Map;
 public interface ToolKitDao {
     int insertToolKit(Map params);
 
-    String selectUserId(String cookie);
+    String selectUserId(@Param("cookie") String cookie);
 
-    List<Toolkit> selectTookies(String userId);
+    List<Toolkit> selectTookies(@Param("userId") String userId);
 
     List<Toolkit> searchKey(Map params);
 

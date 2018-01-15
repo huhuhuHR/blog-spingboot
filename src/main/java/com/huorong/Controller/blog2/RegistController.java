@@ -3,13 +3,16 @@ package com.huorong.Controller.blog2;
 import com.huorong.domain.Result;
 import com.huorong.service.RegistService;
 import com.huorong.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,19 +24,42 @@ public class RegistController {
 
     @RequestMapping("toRegist")
     public Result regist(@RequestParam Map params) {
-        try {
-            if (!registService.registResult(params)) {
-                log.error("regist fail!!!");
-                return Result.build("1", "error", "系统异常");
+        String checkResult = registService.checkParams(params);
+        if (!StringUtils.isEmpty(checkResult)) {
+            // 6 数据有问题
+            return Result.build("0", "ok", MapUtils.of("result", "6", "checkResult", checkResult));
+        }
+        String result = registService.registResult(params);
+        String userId = MapUtils.getStr(params, "userId");
+        if ("2".equals(result)) {
+            try {
+                String uuid = registService.sendEmailToReigst(MapUtils.getStr(params, "blogEmail"), userId);
+                return Result.build("0", "ok", MapUtils.of("result", result, "uuid", uuid));
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("邮件记录日志异常");
             }
-        } catch (Exception e) {
-            return Result.build("1", "error", e.getMessage());
         }
-        try {
-            registService.sendEmailToReigst(MapUtils.getStr(params, "blogEmail"),MapUtils.getStr(params, "userId"));
-        } catch (Exception e) {
-            log.error("邮件记录日志异常" + e);
+        return Result.build("0", "ok", MapUtils.of("result", result));
+    }
+
+    @RequestMapping(value = "toActive", method = RequestMethod.POST)
+    public Result toActive(@RequestParam String uuid, @RequestParam String msg) throws Exception {
+        String userId = registService.toActive(uuid, msg);
+        if (!StringUtils.isEmpty(userId)) {
+            return Result.build("0", "ok", MapUtils.of("userId", userId));
         }
-        return Result.build("0", "ok");
+        return Result.build("1", "error");
+    }
+
+    @RequestMapping("getLoginInfo")
+    public Result getLoginInfo(@RequestParam Map params) {
+        return registService.getLoginInfo(params);
+    }
+
+    @RequestMapping(value = "getMembers", method = RequestMethod.POST)
+    public Result getMembers() {
+        List<Map> members = registService.getMembers();
+        return Result.build("0", "ok", MapUtils.of("size", members.size(), "members", members));
     }
 }

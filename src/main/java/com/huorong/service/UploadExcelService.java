@@ -6,21 +6,33 @@ import com.huorong.domain.Program;
 import com.huorong.utils.MapUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Created by huorong on 17/12/22.
  */
 @Service
 public class UploadExcelService {
+    private File f;
+    private final int SIZE_2M = 2097152;
+    private ZipFile _zipFile;
+    private static final Logger log = LoggerFactory.getLogger(UploadExcelService.class);
+    private static final String PHOTO_SUFFIX = "750x375";
+    private static final String PERIOD_SUFFIX = "216x120";
+    private static final String POST_SUFFIX = "245x325";
 
     public String generatorJson(List<Program> programs) {
         return JSON.toJSONString(programs);
@@ -130,5 +142,75 @@ public class UploadExcelService {
             cellData.setComment(cellData.getComment() + "\n" + error);
         }
         return cellData;
+    }
+
+    public Map<String, List> getPhotosByProgramName(MultipartFile fileZip, String type) throws Exception {
+        if (fileZip == null) {
+            return new HashMap<>();
+        }
+        Set<String> tempOrderSet = new HashSet<>();
+        f = File.createTempFile("tmp", null);
+        if (f.exists()) {
+            if (f.delete()) {
+                log.info("BatchAddProgramService--:delete success tempFile!!!");
+            }
+        }
+        fileZip.transferTo(f);
+        f.deleteOnExit();
+        _zipFile = new ZipFile(f);
+        Enumeration entries = _zipFile.entries();
+        Map<String, List> map = new HashMap<>();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = (ZipEntry) entries.nextElement();
+            if (!entry.isDirectory()) {
+                String entryName = entry.getName();
+                if (entryName.contains("__MACOSX/")) {
+                    continue;
+                }
+                if (entryName.contains("/")) {
+                    int indexEntryName = entryName.lastIndexOf("/");
+                    entryName = entryName.substring(indexEntryName + 1, entryName.length());
+                }
+                String[] arr = entryName.split("-");
+                String programName = arr[0];
+                String photoName = entryName.split("\\.")[0];
+                String suffix = photoName.split("-")[1];
+                if ("0".equals(type) && PERIOD_SUFFIX.equals(suffix)) {
+                    continue;
+                }
+                if ("1".equals(type) && POST_SUFFIX.equals(suffix)) {
+                    continue;
+                }
+                log.info(":BatchAddProgramService--:entryName:{}", entryName);
+                if (!entryName.matches("^[\\s\\S]{1,20}(-)(\\d)+(x)(\\d)+(-)(\\d)+(\\.)(jpeg|jpg|png|gif|bmp)$")) {
+                    log.info(":BatchAddProgramService--:photo format  does not match:{}",
+                            "ZIP压缩包中的图片：" + entryName + "，错误原因：上传图片格式不正确。");
+                    continue;
+                }
+                // 重复照片命名
+                if (!tempOrderSet.add(photoName)) {
+                    log.info("BatchAddProgramService--:photo name repeat!!!,programName:{}",
+                            "ZIP压缩包中的图片：" + entryName + "，错误原因：压缩包中该图片名字重复出现");
+                    continue;
+                }
+                InputStream inputStream = _zipFile.getInputStream(entry);
+                int size = inputStream.available();
+                // 图片规格不符和标准
+                if (size > SIZE_2M) {
+                    log.info("BatchAddProgramService--:photo size more than 2 m!!!,programImportSortNumber:{},size:{}",
+                            "ZIP压缩包中的图片：" + entryName + "，错误原因：该图片大小大于2M，过大", size);
+                    continue;
+                }
+                if (!PHOTO_SUFFIX.equals(suffix) && !PERIOD_SUFFIX.equals(suffix) && !POST_SUFFIX.equals(suffix)) {
+                    log.info("BatchAddProgramService--:photo suffix does not match the suffix!!!,suffix:{}",
+                            "ZIP压缩包中的图片：" + entryName
+                                    + "，错误原因：该图片不符合750x375／216x120命名规则。命名需符合。例子1-1-750x375.jpg或者1-1-126x120。");
+                    continue;
+                }
+                List mapList = map.computeIfAbsent(programName, k -> new ArrayList());
+                mapList.add(MapUtils.of("name", photoName, "entry", entry));
+            }
+        }
+        return map;
     }
 }

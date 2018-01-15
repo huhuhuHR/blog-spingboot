@@ -41,11 +41,42 @@
     <insert id="registBlog" parameterType="java.util.Map">
         INSERT INTO
           blog_user(user_id,blog_name,blog_password,user_email,blog_create_time,blog_update_time,blog_state,level)
-        VALUES (#{userId},#{blogName},#{blogPassword},#{blogEmail},now(),now(),'0','3')
+        VALUES (#{userId},#{blogName},#{blogPassword},#{blogEmail},now(),now(),'0','0')
     </insert>
     <insert id="insertEmailLog" parameterType="java.util.Map">
         INSERT INTO blog_email_active
-          (user_id,createTime,uuid,state)
-          VALUES (#{userId},now(),#{uuid},#{state})
+          (user_id,createTime,uuid,state,msg)
+          VALUES (#{userId},now(),#{uuid},#{state},#{msg})
     </insert>
+    <select id="selectUserId" parameterType="java.lang.String" resultType="java.lang.String">
+          SELECT user_id
+          FROM blog_email_active
+            WHERE uuid = #{uuid}
+            AND msg = #{msg}
+    </select>
+    <update id="toActive" parameterType="java.lang.String">
+            UPDATE blog_user
+            SET blog_state = '1'
+            WHERE user_id = #{userId}
+    </update>
+    <select id="getLoginInfo" parameterType="java.util.Map" resultType="java.util.Map">
+          SELECT
+			  user_id    'userId',
+			  blog_state 'state',
+			  blog_password 'password'
+			FROM blog_user
+			WHERE (blog_name = #{name} || user_email =  #{name})
+    </select>
+    <select id="selectUUidByUserId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT uuid
+        FROM blog_email_active
+        WHERE user_id=#{userId}
+    </select>
+    <select id="getMembers" resultType="java.util.Map">
+        SELECT
+          blog_name  'name',
+          user_email 'email'
+        FROM blog_user
+        ORDER BY blog_create_time
+    </select>
 </mapper>

@@ -15,19 +15,32 @@ public class EmailUtil {
     private static final Logger log = LoggerFactory.getLogger(EmailUtil.class);
     private static final String HOST = "smtp.163.com";
     private static final String PROTOCOL = "smtp";
-    private static final int PORT = 25;
+    private static final String PORT = "465";
+    private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
     /**
      * 获取Session
      *
      * @return session
      */
-    private static Session getSession(AdminEmail adminEmail) {
+    private static Session getSession(AdminEmail adminEmail, boolean isBuild) {
         Properties props = new Properties();
-        props.put("mail.smtp.host", HOST);// 设置服务器地址
-        props.put("mail.store.protocol", PROTOCOL);// 设置协议
-        props.put("mail.smtp.port", PORT);// 设置端口
         props.put("mail.smtp.auth", "true");
+        if (!isBuild) {
+            props.put("mail.smtp.host", HOST);// 设置服务器地址
+            props.put("mail.smtp.port", PORT);// 设置端口
+            props.put("mail.store.protocol", PROTOCOL);// 设置协议
+            log.debug("测试");
+            log.info("测试");
+        } else {
+            props.setProperty("mail.smtp.host", HOST);
+            props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+            props.setProperty("mail.smtp.socketFactory.fallback", "false");
+            props.setProperty("mail.smtp.port", PORT);
+            props.setProperty("mail.smtp.socketFactory.port", PORT);
+            log.debug("生产");
+            log.info("生产");
+        }
         return Session.getDefaultInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -37,8 +50,8 @@ public class EmailUtil {
         });
     }
 
-    public static boolean sendEmail(String toEmail, String content, AdminEmail adminEmail) {
-        Session session = getSession(adminEmail);
+    public static boolean sendEmail(String toEmail, String content, AdminEmail adminEmail, boolean isBuild) {
+        Session session = getSession(adminEmail, isBuild);
         try {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(adminEmail.getName()));
@@ -46,15 +59,22 @@ public class EmailUtil {
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject("账号激活邮件");
             msg.setSentDate(new Date());
-            msg.setContent(content, "text/html;charset=utf-8");
+            msg.setContent("<div align=\"center\">" + content + "</div>", "text/html;charset=utf-8");
             msg.saveChanges();
             Transport.send(msg);
             log.info("admin发送激活邮件给{},内容{}", toEmail, content);
+            log.debug("admin发送激活邮件给{},内容{}", toEmail, content);
         } catch (MessagingException mex) {
             mex.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    public static void sendEmailAsyn(String toEmail, String msg, AdminEmail adminEmail, boolean isBuild) {
+        Thread t = new Thread(() -> sendEmail(toEmail, msg, adminEmail, isBuild));
+        t.start();
+        t.interrupt();
     }
 
     /**

@@ -3,11 +3,11 @@ package com.huorong.evn;
 public class BlogContext {
     private static ThreadLocal<String> permissionLocal = new InheritableThreadLocal();
 
-    public static String getPermission() {
+    public static String getToken() {
         return permissionLocal.get();
     }
 
-    public static void setPermission(String permission) {
+    public static void setToken(String permission) {
         permissionLocal.set(permission);
     }
 
