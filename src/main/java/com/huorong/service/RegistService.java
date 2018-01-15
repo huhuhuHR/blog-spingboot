@@ -80,8 +80,10 @@ public class RegistService {
         String key = String.valueOf(Id.next());
         String msg = "激活命令：" + key;
         String uuid = String.valueOf(UUID.randomUUID());
+        String evn = getEvn();
+        boolean isBuid = "pro".equals(evn);
         try {
-            EmailUtil.sendEmailAsyn(blogEmail, msg, adminEmail);
+            EmailUtil.sendEmailAsyn(blogEmail, msg, adminEmail, isBuid);
             registDao.insertEmailLog(MapUtils.of("userId", userId, "uuid", uuid, "state", "1", "msg", key));
         } catch (Exception e) {
             e.printStackTrace();
