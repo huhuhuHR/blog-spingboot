@@ -46,7 +46,7 @@
         WHERE state = '1'
         AND bu.user_id = bus.user_id
         <if test="type != null">
-            ORDER BY bus.update_time DESC
+            ORDER BY bus.create_time DESC
         </if>
         <if test="type == null">
             ORDER BY bus.record_count DESC
