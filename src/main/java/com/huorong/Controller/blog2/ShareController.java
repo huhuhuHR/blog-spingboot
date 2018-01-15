@@ -45,4 +45,9 @@ public class ShareController {
     public Result deleteMyShare(@RequestParam String userId, @RequestParam String shareId) {
         return shareService.deleteMyShare(userId, shareId) ? Result.build("0", "ok") : Result.build("1", "error");
     }
+
+    @RequestMapping("addShareCount")
+    public void addShareCount(@RequestParam String shareId) {
+        shareService.updateCountByShareId(shareId);
+    }
 }

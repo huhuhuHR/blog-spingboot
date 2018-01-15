@@ -12,6 +12,7 @@
         <result column="record_count" property="recordCount"/>
         <result column="image_id" property="imageId"/>
         <result column="imageName" property="imageName"/>
+        <result column="userName" property="userName"/>
     </resultMap>
     <sql id="share_colmn">
       user_id,share_id,share_url,share_title,share_desc,create_time,update_time,record_count,image_id
@@ -33,14 +34,17 @@
         bus.update_time 'updateTime',
         bus.record_count 'recordCount',
         bus.image_id 'imageId',
-        bui.image_name 'imageName'
+        bui.image_name 'imageName',
+        bu.blog_name 'userName'
         FROM
         blog_user_share bus
         LEFT JOIN
         blog_user_image bui
         ON
-        bui.image_id = bus.image_id
+        bui.image_id = bus.image_id,
+        blog_user bu
         WHERE state = '1'
+        AND bu.user_id = bus.user_id
         <if test="type != null">
             ORDER BY bus.update_time DESC
         </if>
@@ -62,5 +66,12 @@
         WHERE user_id = #{userId}
         AND share_id = #{shareId}
         AND state = '1'
+    </update>
+
+    <update id="updateCountByShareId" parameterType="java.lang.String">
+        UPDATE blog_user_share
+        SET record_count = (record_count + 1),
+        update_time = now()
+        WHERE share_id = #{shareId}
     </update>
 </mapper>

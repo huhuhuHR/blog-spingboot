@@ -14,4 +14,6 @@ public interface ShareDao {
     List<Map> selectMyShare(@Param("userId") String userId);
 
     int deleteMyShare(@Param("userId") String userId, @Param("shareId") String shareId);
+
+    int updateCountByShareId(@Param("shareId") String shareId);
 }

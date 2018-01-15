@@ -11,10 +11,12 @@ public class BlogShare {
     private String shareId;
     private String shareUrl;
     private String shareTitle;
-    private String shareDesc;
+    private String shareDesc;// 标签
     private String createTime;
     private String updateTime;
     private String recordCount;
     private String imageId;
     private String imageName;
+    private String userName;
+    private String dayString;
 }
