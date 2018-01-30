@@ -33,7 +33,6 @@
         bus.create_time 'createTime',
         bus.update_time 'updateTime',
         bus.record_count 'recordCount',
-        bus.image_id 'imageId',
         bu.blog_name 'userName',
         bus.image_id 'imageId'
         FROM
