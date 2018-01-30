@@ -70,7 +70,7 @@ public class ShareService {
             String imageId = blogShare.getImageId();
             if (StringUtils.isNotEmpty(imageId)) {
                 String env_dev = env.getProperty("evn_share");
-                if (!StringUtils.isEmpty(env_dev)) {
+                if (StringUtils.isEmpty(env_dev)) {
                     blogShare.setImageId("http://localhost:7002/image/" + imageId);
                 } else {
                     blogShare.setImageId("/image/" + imageId);
