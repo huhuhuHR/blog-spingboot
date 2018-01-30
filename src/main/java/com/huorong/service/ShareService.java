@@ -48,7 +48,7 @@ public class ShareService {
     }
 
     public String getImageId(Map map) {
-        String prefix = env.getProperty("dev_prefix");
+        String prefix = env.getProperty("prefix");
         String base64 = MapUtils.getStr(map, "base64Image");
         String base64Sub = subBase64(base64);
         String suffix = MapUtils.getStr(map, "suffix");
@@ -69,10 +69,10 @@ public class ShareService {
         shares.stream().forEach((BlogShare blogShare) -> {
             String imageId = blogShare.getImageId();
             if (StringUtils.isNotEmpty(imageId)) {
-                String env_dev = env.getProperty("evn_share");
-                if (StringUtils.isEmpty(env_dev)) {
+                String share_evn = env.getProperty("share_evn");
+                if ("dev".equals(share_evn)) {
                     blogShare.setImageId("http://localhost:7002/image/" + imageId);
-                } else {
+                } else if ("pro".equals(share_evn)) {
                     blogShare.setImageId("/image/" + imageId);
                 }
             }
