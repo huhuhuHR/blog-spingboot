@@ -2,19 +2,27 @@ package com.huorong.service;
 
 import com.huorong.dao.ShareDao;
 import com.huorong.domain.BlogShare;
+import com.huorong.utils.ImageUtils;
 import com.huorong.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Id;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ShareService {
+    @Autowired
+    private Environment env;
+
     private Logger log = LoggerFactory.getLogger(ShareService.class);
     @Autowired
     ShareDao shareDao;
@@ -35,6 +43,21 @@ public class ShareService {
     public void prepareParams(Map map) {
         map.put("shareId", Id.next());
         map.put("recordCount", "0");
+        String imageId = getImageId(map);
+        map.put("imageId", imageId);
+    }
+
+    public String getImageId(Map map) {
+        String prefix = env.getProperty("dev_prefix");
+        String base64 = MapUtils.getStr(map, "base64Image");
+        String base64Sub = subBase64(base64);
+        String suffix = MapUtils.getStr(map, "suffix");
+        return ImageUtils.GenerateImage(base64Sub, prefix, suffix);
+    }
+
+    public String subBase64(String base64) {
+        int index = base64.indexOf(",") + 1;
+        return base64.substring(index);
     }
 
     public List<BlogShare> selectNewestShare(Map params) {
@@ -44,6 +67,15 @@ public class ShareService {
         }
         List<BlogShare> shares = shareDao.selectNewestShare(params);
         shares.stream().forEach((BlogShare blogShare) -> {
+            String imageId = blogShare.getImageId();
+            if (StringUtils.isNotEmpty(imageId)) {
+                String env_dev = env.getProperty("evn_share");
+                if (!StringUtils.isEmpty(env_dev)) {
+                    blogShare.setImageId("http://localhost:7002/image/" + imageId);
+                } else {
+                    blogShare.setImageId("/image/" + imageId);
+                }
+            }
             String createTime = blogShare.getCreateTime();
             try {
                 Calendar calendar = Calendar.getInstance();

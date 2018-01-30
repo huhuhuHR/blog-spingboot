@@ -27,6 +27,7 @@ public class ShareController {
         if (StringUtils.isEmpty(shareUrl)) {
             Result.build("1", "error");
         }
+
         return shareService.insertShare(params) ? Result.build("0", "ok") : Result.build("1", "error");
     }
 
