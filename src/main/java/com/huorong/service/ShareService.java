@@ -1,6 +1,5 @@
 package com.huorong.service;
 
-import com.github.pagehelper.PageHelper;
 import com.huorong.dao.ShareDao;
 import com.huorong.domain.BlogShare;
 import com.huorong.utils.ImageUtils;
@@ -29,8 +28,8 @@ public class ShareService {
     ShareDao shareDao;
     private final long ONE_DAY = 86400000;
     private final long ONE_HOUR = 3600000;
-    @Autowired
-    PageHelper pageHelper;
+    // @Autowired
+    // PageHelper pageHelper;
 
     public boolean insertShare(Map map) {
         prepareParams(map);
@@ -68,7 +67,6 @@ public class ShareService {
         if ("0".equals(type)) {
             params.remove("type");
         }
-        PageHelper.startPage(1, 1);
         List<BlogShare> shares = shareDao.selectNewestShare(params);
         shares.stream().forEach((BlogShare blogShare) -> {
             String imageId = blogShare.getImageId();
