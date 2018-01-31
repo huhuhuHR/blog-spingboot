@@ -63,7 +63,8 @@
           SELECT
 			  user_id    'userId',
 			  blog_state 'state',
-			  blog_password 'password'
+			  blog_password 'password',
+			  val1 'userImage'
 			FROM blog_user
 			WHERE (blog_name = #{name} || user_email =  #{name})
     </select>
@@ -75,7 +76,8 @@
     <select id="getMembers" resultType="java.util.Map">
         SELECT
           blog_name  'name',
-          user_email 'email'
+        user_email 'email',
+        val1 'userImage'
         FROM blog_user
         ORDER BY blog_create_time
     </select>

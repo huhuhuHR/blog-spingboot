@@ -62,6 +62,20 @@ public class ShareService {
         return base64.substring(index);
     }
 
+    public String getSuffix(String base64) {
+        int index = base64.indexOf(",") + 1;
+        String strPix = base64.substring(0, index);
+        String result = "";
+        if (strPix.contains("jpg")) {
+            result = ".jpg";
+        } else if (strPix.contains("png")) {
+            result = ".png";
+        } else if (strPix.contains("jpeg")) {
+            result = ".jpeg";
+        }
+        return result;
+    }
+
     public List<BlogShare> selectNewestShare(Map params) {
         String type = MapUtils.getStr(params, "type");
         if ("0".equals(type)) {
@@ -103,6 +117,24 @@ public class ShareService {
             }
         });
         return shares;
+    }
+
+    public String uploadImage(Map params) {
+        String base64 = MapUtils.getStr(params, "dataImage");
+        String userId = MapUtils.getStr(params, "userId");
+        String suffix = getSuffix(base64);
+        String base64Sub = subBase64(base64);
+        String prefix = env.getProperty("prefix");
+        String imageId = ImageUtils.GenerateImage(base64Sub, prefix, suffix);
+        shareDao.updateImage(userId, imageId);
+        String result = "";
+        String share_evn = env.getProperty("share_evn");
+        if ("dev".equals(share_evn)) {
+            result = "http://localhost:7002/image/" + imageId;
+        } else if ("pro".equals(share_evn)) {
+            result = "/image/" + imageId;
+        }
+        return result;
     }
 
     public List<Map> selectMyShare(String userId) {

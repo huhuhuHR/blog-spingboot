@@ -16,4 +16,6 @@ public interface ShareDao {
     int deleteMyShare(@Param("userId") String userId, @Param("shareId") String shareId);
 
     int updateCountByShareId(@Param("shareId") String shareId);
+
+    int updateImage(@Param("userId") String userId, @Param("imageId") String imageId);
 }

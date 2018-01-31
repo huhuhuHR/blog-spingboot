@@ -36,6 +36,11 @@ public class ShareController {
         return Result.build("0", "ok", MapUtils.of("shares", shareService.selectNewestShare(params)));
     }
 
+    @RequestMapping("uploadImag")
+    public Result uploadImag(@RequestParam Map params) {
+        return Result.build("0", "ok", MapUtils.of("image", shareService.uploadImage(params)));
+    }
+
     @RequestMapping("selectShares")
     public Result selectyShares(@RequestParam String userId) {
         List<Map> shares = shareService.selectMyShare(userId);

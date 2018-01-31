@@ -79,4 +79,9 @@
         update_time = now()
         WHERE share_id = #{shareId}
     </update>
+    <update id="updateImage" parameterType="java.lang.String">
+        UPDATE blog_user
+        SET val1 = #{imageId}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>
