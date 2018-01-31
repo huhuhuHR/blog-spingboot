@@ -144,8 +144,8 @@ public class RegistService extends BaseService {
             }
             if ("1".equals(state)) {
                 // 登录成功
-                return Result.build("0", "ok",
-                        MapUtils.of("result", "1", "userId", userId, "userImage", imageName(userImage)));
+                return Result.build("0", "ok", MapUtils.of("result", "1", "userId", userId, "userImage",
+                        StringUtils.isEmpty(userImage) ? "" : imageName(userImage)));
             } else {
                 // 未激活s
                 return Result.build("0", "ok",
