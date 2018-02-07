@@ -74,7 +74,6 @@ public class EmailUtil {
     public static void sendEmailAsyn(String toEmail, String msg, AdminEmail adminEmail, boolean isBuild) {
         Thread t = new Thread(() -> sendEmail(toEmail, msg, adminEmail, isBuild));
         t.start();
-        t.interrupt();
     }
 
     /**
