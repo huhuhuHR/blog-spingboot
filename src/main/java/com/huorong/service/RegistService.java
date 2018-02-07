@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class RegistService {
+public class RegistService extends BaseService {
     private Logger log = LoggerFactory.getLogger(RegistService.class);
     @Autowired
     RegistDao registDao;
@@ -137,13 +137,15 @@ public class RegistService {
         if (loginInfo != null) {
             String userId = MapUtils.getStr(loginInfo, "userId");
             String state = MapUtils.getStr(loginInfo, "state");
+            String userImage = MapUtils.getStr(loginInfo, "userImage");
             String relPassword = MapUtils.getStr(loginInfo, "password");
             if (!password.equals(relPassword)) {
                 return Result.build("0", "ok", MapUtils.of("result", "0", "msg", "密码错误"));
             }
             if ("1".equals(state)) {
                 // 登录成功
-                return Result.build("0", "ok", MapUtils.of("result", "1", "userId", userId));
+                return Result.build("0", "ok", MapUtils.of("result", "1", "userId", userId, "userImage",
+                        StringUtils.isEmpty(userImage) ? "" : imageName(userImage)));
             } else {
                 // 未激活s
                 return Result.build("0", "ok",
@@ -156,6 +158,12 @@ public class RegistService {
 
     public List<Map> getMembers() {
         List<Map> members = registDao.getMembers();
+        members.forEach(m -> {
+            String userImage = MapUtils.getStr(m, "userImage");
+            if (StringUtils.isNotEmpty(userImage)) {
+                m.put("userImage", imageName(userImage));
+            }
+        });
         if (members == null) {
             members = new ArrayList<>();
         }

@@ -19,4 +19,16 @@ public class SpringbootApplication {
         // 启动嵌入式的 Tomcat 并初始化 Spring 环境及其各 Spring 组件
         SpringApplication.run(SpringbootApplication.class, args);
     }
+
+    // @Bean
+    // public PageHelper pageHelper() {
+    // PageHelper pageHelper = new PageHelper();
+    // Properties properties = new Properties();
+    // properties.setProperty("offsetAsPageNum", "true");
+    // properties.setProperty("rowBoundsWithCount", "true");
+    // properties.setProperty("reasonable", "true");
+    // properties.setProperty("dialect", "mysql"); // 配置mysql数据库的方言
+    // pageHelper.setProperties(properties);
+    // return pageHelper;
+    // }
 }

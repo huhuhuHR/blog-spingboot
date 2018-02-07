@@ -20,8 +20,8 @@
     <insert id="insertShare"
             parameterType="java.util.Map">
         INSERT INTO blog_user_share
-        (user_id, share_id, share_url, share_title, share_desc, create_time, update_time, record_count)
-        VALUES (#{userId},#{shareId},#{shareUrl},#{shareTitle},#{shareDesc},now(),now(),#{recordCount});
+        (user_id, share_id, share_url, share_title, share_desc, create_time, update_time, record_count,image_id)
+        VALUES (#{userId},#{shareId},#{shareUrl},#{shareTitle},#{shareDesc},now(),now(),#{recordCount},#{imageId});
     </insert>
     <select id="selectNewestShare" parameterType="java.util.Map" resultMap="blogShare">
         SELECT
@@ -33,15 +33,10 @@
         bus.create_time 'createTime',
         bus.update_time 'updateTime',
         bus.record_count 'recordCount',
-        bus.image_id 'imageId',
-        bui.image_name 'imageName',
-        bu.blog_name 'userName'
+        bu.blog_name 'userName',
+        bus.image_id 'imageId'
         FROM
-        blog_user_share bus
-        LEFT JOIN
-        blog_user_image bui
-        ON
-        bui.image_id = bus.image_id,
+        blog_user_share bus,
         blog_user bu
         WHERE state = '1'
         <if test="searchKey != null">
@@ -83,5 +78,10 @@
         SET record_count = (record_count + 1),
         update_time = now()
         WHERE share_id = #{shareId}
+    </update>
+    <update id="updateImage" parameterType="java.lang.String">
+        UPDATE blog_user
+        SET val1 = #{imageId}
+        WHERE user_id = #{userId}
     </update>
 </mapper>

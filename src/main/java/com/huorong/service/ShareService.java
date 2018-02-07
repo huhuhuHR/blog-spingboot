@@ -2,24 +2,34 @@ package com.huorong.service;
 
 import com.huorong.dao.ShareDao;
 import com.huorong.domain.BlogShare;
+import com.huorong.utils.ImageUtils;
 import com.huorong.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Id;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ShareService {
+    @Autowired
+    private Environment env;
+
     private Logger log = LoggerFactory.getLogger(ShareService.class);
     @Autowired
     ShareDao shareDao;
     private final long ONE_DAY = 86400000;
     private final long ONE_HOUR = 3600000;
+    // @Autowired
+    // PageHelper pageHelper;
 
     public boolean insertShare(Map map) {
         prepareParams(map);
@@ -35,6 +45,35 @@ public class ShareService {
     public void prepareParams(Map map) {
         map.put("shareId", Id.next());
         map.put("recordCount", "0");
+        String imageId = getImageId(map);
+        map.put("imageId", imageId);
+    }
+
+    public String getImageId(Map map) {
+        String prefix = env.getProperty("prefix");
+        String base64 = MapUtils.getStr(map, "base64Image");
+        String base64Sub = subBase64(base64);
+        String suffix = MapUtils.getStr(map, "suffix");
+        return ImageUtils.GenerateImage(base64Sub, prefix, suffix);
+    }
+
+    public String subBase64(String base64) {
+        int index = base64.indexOf(",") + 1;
+        return base64.substring(index);
+    }
+
+    public String getSuffix(String base64) {
+        int index = base64.indexOf(",") + 1;
+        String strPix = base64.substring(0, index);
+        String result = "";
+        if (strPix.contains("jpg")) {
+            result = ".jpg";
+        } else if (strPix.contains("png")) {
+            result = ".png";
+        } else if (strPix.contains("jpeg")) {
+            result = ".jpeg";
+        }
+        return result;
     }
 
     public List<BlogShare> selectNewestShare(Map params) {
@@ -44,6 +83,15 @@ public class ShareService {
         }
         List<BlogShare> shares = shareDao.selectNewestShare(params);
         shares.stream().forEach((BlogShare blogShare) -> {
+            String imageId = blogShare.getImageId();
+            if (StringUtils.isNotEmpty(imageId)) {
+                String share_evn = env.getProperty("share_evn");
+                if ("dev".equals(share_evn)) {
+                    blogShare.setImageId("http://localhost:7002/image/" + imageId);
+                } else if ("pro".equals(share_evn)) {
+                    blogShare.setImageId("/image/" + imageId);
+                }
+            }
             String createTime = blogShare.getCreateTime();
             try {
                 Calendar calendar = Calendar.getInstance();
@@ -69,6 +117,24 @@ public class ShareService {
             }
         });
         return shares;
+    }
+
+    public String uploadImage(Map params) {
+        String base64 = MapUtils.getStr(params, "dataImage");
+        String userId = MapUtils.getStr(params, "userId");
+        String suffix = getSuffix(base64);
+        String base64Sub = subBase64(base64);
+        String prefix = env.getProperty("prefix");
+        String imageId = ImageUtils.GenerateImage(base64Sub, prefix, suffix);
+        shareDao.updateImage(userId, imageId);
+        String result = "";
+        String share_evn = env.getProperty("share_evn");
+        if ("dev".equals(share_evn)) {
+            result = "http://localhost:7002/image/" + imageId;
+        } else if ("pro".equals(share_evn)) {
+            result = "/image/" + imageId;
+        }
+        return result;
     }
 
     public List<Map> selectMyShare(String userId) {
